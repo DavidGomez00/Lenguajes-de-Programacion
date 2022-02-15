@@ -14,6 +14,8 @@ class CoolLexer(Lexer):
     literals = {}
     # Ejemplo
     ELSE = r'\b[eE][lL][sS][eE]\b'
+    WHILE = r'\b[Ww][Hh][Ii][Ll][Ee]\b'
+    INT_CONST = r'\b[0-9]+\b'
     STR_CONST = r'\b".*"\b'
     
     @_(r'[A-Z]+')
@@ -21,9 +23,19 @@ class CoolLexer(Lexer):
         t.value = (t.value) + 'dddd'
         return t
 
-    @_(r'\b[Ww][Hh][Ii][Ll][Ee]\b')
+    @_(r'\bt[Rr][Uu][Ee]\b')
+    def BOOL_CONST(self, t):
+        t.value = (t.value).lower()
+        return t
+    
+    @_(r'\bf[Aa][Ll][Ss][Ee]\b')
+    def BOOL_CONST(self, t):
+        t.value = (t.value).lower()
+        return t
+
+    @_(r'\b[A-Z]+\b')
     def TYPEID(self, t):
-        t.value = (t.value) + 'dddd'
+        t.value = (t.value)
         return t
 
     CARACTERES_CONTROL = [bytes.fromhex(i+hex(j)[-1]).decode('ascii')
@@ -54,7 +66,3 @@ class CoolLexer(Lexer):
             
             list_strings.append(result)
         return list_strings
-
-
-c = CoolLexer()
-c.salida("while")
