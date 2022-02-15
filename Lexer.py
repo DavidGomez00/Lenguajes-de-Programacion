@@ -10,7 +10,7 @@ class CoolLexer(Lexer):
               ELSE, IF, FI, THEN, NOT, IN, CASE, ESAC, CLASS,
               INHERITS, ISVOID, LET, LOOP, NEW, OF,
               POOL, THEN, WHILE, NUMBER, STR_CONST, LE, DARROW, ASSIGN}
-    #ignore = '\t '
+    ignore = '\t \n \r'
     literals = {}
     # Ejemplo
     ELSE = r'\b[eE][lL][sS][eE]\b'
