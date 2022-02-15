@@ -39,8 +39,8 @@ class CoolLexer(Lexer):
         t.value = (t.value)
         return t
 
-    @_(r'.')
-    def ERROR(self, t):
+    @_(r'[a-z][a-zA-Z0-9_]*')
+    def OBJECTID(self, t):
         t.value = (t.value)
         return t
 
