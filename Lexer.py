@@ -51,6 +51,10 @@ class CoolLexer(Lexer):
                 result = f'#{token.lineno} {token.type} {token.value}'
             else:
                 result = f'#{token.lineno} {token.type}'
+            
             list_strings.append(result)
         return list_strings
 
+
+c = CoolLexer()
+c.salida("while")
