@@ -34,7 +34,7 @@ class CoolLexer(Lexer):
         t.value = (t.value).lower()
         return t
 
-    @_(r'\b[A-Z]+\b')
+    @_(r'\b[A-Z][a-zA-Z0-9_]*\b')
     def TYPEID(self, t):
         t.value = (t.value)
         return t
