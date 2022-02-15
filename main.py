@@ -10,7 +10,7 @@ DIRECTORIO = os.path.expanduser("~/Repositorio/Docencia/Asignaturas/LP/Proyecto/
 sys.path.append(DIRECTORIO)
 
 from Lexer import *
-from Parser import *
+#from Parser import *
 from Clases import *
 
 PRACTICA = "02" # Practica que hay que evaluar

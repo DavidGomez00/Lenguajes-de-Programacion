@@ -18,8 +18,41 @@ class CoolLexer(Lexer):
     literals = {}
     # Ejemplo
     ELSE = r'\b[eE][lL][sS][eE]\b'
+    
+    @_(r'[A-Z]+')
+    def TYPEID(self, t):
+        t.value = (t.value) + 'dddd'
+        return t
+
+    @_(r'\b[Ww][Hh][Ii][Ll][Ee]\b')
+    def TYPEID(self, t):
+        t.value = (t.value) + 'dddd'
+        return t
 
     CARACTERES_CONTROL = [bytes.fromhex(i+hex(j)[-1]).decode('ascii')
                           for i in ['0', '1']
                           for j in range(16)] + [bytes.fromhex(hex(127)[-2:]).decode("ascii")]
 
+    def salida(self, texto):
+        lexer = CoolLexer()
+        list_strings = []
+        for token in lexer.tokenize(texto):
+            result = f'#{token.lineno} {token.type} '
+            if token.type == 'OBJECTID':
+                result += f"{token.value}"
+            elif token.type == 'BOOL_CONST':
+                result += "true" if token.value else "false"
+            elif token.type == 'TYPEID':
+                result += f"{str(token.value)}"
+            elif token.type in self.literals:
+                result = f'#{token.lineno} \'{token.type}\' '
+            elif token.type == 'STR_CONST':
+                result += token.value
+            elif token.type == 'INT_CONST':
+                result += str(token.value)
+            elif token.type == 'ERROR':
+                result = f'#{token.lineno} {token.type} {token.value}'
+            else:
+                result = f'#{token.lineno} {token.type}'
+                list_strings.append(result)
+        return list_strings
