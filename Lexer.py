@@ -5,44 +5,88 @@ import os
 import re
 import sys
 
+class Comentario(Lexer):
+    ''' Clase para interpretar comentarios
+    '''
+
+    # Tokens
+    tokens = {}
+    
+    # Función para ignorar
+    @_(r'.')
+    def PASAR(self, t):
+        pass
+
+    # Función para terminar el comentario
+    @_(r'\*\)')
+    def VOLVER(self, t):
+        # Retorna el flujo al CoolLexer
+        self.begin(CoolLexer)
+pass
+
 class CoolLexer(Lexer):
+    ''' Lexer para interpretar el lenguaje COOL
+    '''
+
+    # Tipos de tokens
     tokens = {OBJECTID, INT_CONST, BOOL_CONST, TYPEID,
               ELSE, IF, FI, THEN, NOT, IN, CASE, ESAC, CLASS,
               INHERITS, ISVOID, LET, LOOP, NEW, OF,
               POOL, THEN, WHILE, NUMBER, STR_CONST, LE, DARROW, ASSIGN}
-    ignore = '\t \n \r'
+
+    # Caracteres especiales
+    ignore = '\t '
+    
+    # Literales
     literals = {}
 
-    # Ejemplo
+    # Definimos las regex para los distintos tokens
     ELSE = r'\b[eE][lL][sS][eE]\b'
     WHILE = r'\b[Ww][Hh][Ii][Ll][Ee]\b'
     INT_CONST = r'\b[0-9]+\b'
     STR_CONST = r'\b".*"\b'
     
-    @_(r'[A-Z]+')
-    def TYPEID(self, t):
-        t.value = (t.value) + 'dddd'
-        return t
+    # Definimos las funciones para interpretar los tokens con valor
 
+    # Salto de línea
+    @_(r'\n|\r')
+    def SALTO(self, t):
+        self.lineno += 1
+
+    # Bool True
     @_(r'\bt[Rr][Uu][Ee]\b')
     def BOOL_CONST(self, t):
         t.value = True
         return t
     
+    # Bool False
     @_(r'\bf[Aa][Ll][Ss][Ee]\b')
     def BOOL_CONST(self, t):
         t.value = (t.value).lower()
         return t
 
+    # Type Identifiers
     @_(r'\b[A-Z][a-zA-Z0-9_]*\b')
     def TYPEID(self, t):
         t.value = (t.value)
         return t
 
+    # Object Identifiers
     @_(r'[a-z][a-zA-Z0-9_]*')
     def OBJECTID(self, t):
         t.value = (t.value)
         return t
+
+    # Comment
+    @_(r'\(\*')
+    def COMENTARIO(self, t):
+        # Cambia el Lexer a Comentario
+        self.begin(Comentario)
+
+    def error(self, t):
+        self.index += 1
+
+    
 
     CARACTERES_CONTROL = [bytes.fromhex(i+hex(j)[-1]).decode('ascii')
                           for i in ['0', '1']
