@@ -1,2 +1,32 @@
 #name "s34.test.cool"
- ERROR "EOF in comment"
+ ERROR b
+ ERROR e
+ ERROR f
+ ERROR o
+ ERROR r
+ ERROR e
+ ERROR _
+ ERROR i
+ ERROR t
+ ERROR "
+ ERROR t
+ ERROR h
+ ERROR i
+ ERROR s
+ ERROR s
+ ERROR t
+ ERROR r
+ ERROR i
+ ERROR n
+ ERROR g
+ ERROR \
+ ERROR d
+ ERROR o
+ ERROR e
+ ERROR n
+ ERROR s
+ ERROR '
+ ERROR t
+ ERROR e
+ ERROR n
+ ERROR d

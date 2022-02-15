@@ -1,2 +1,17 @@
 #name "validcharacters.cool"
- ERROR "EOF in comment"
+ ERROR +
+ ERROR /
+ ERROR -
+ ERROR *
+ ERROR =
+ ERROR <
+ ERROR .
+ ERROR ~
+ ERROR ,
+ ERROR ;
+ ERROR :
+ ERROR (
+ ERROR )
+ ERROR @
+ ERROR {
+ ERROR }

@@ -1,2 +1,29 @@
 #name "s03.test.cool"
- ERROR "EOF in comment"
+ ERROR -
+ ERROR -
+ ERROR c
+ ERROR a
+ ERROR n
+ ERROR t
+ ERROR h
+ ERROR e
+ ERROR y
+ ERROR h
+ ERROR a
+ ERROR n
+ ERROR d
+ ERROR l
+ ERROR e
+ TYPEID EOF
+ ERROR i
+ ERROR n
+ ERROR "
+ ERROR -
+ ERROR -
+ ERROR "
+ ERROR s
+ ERROR t
+ ERROR a
+ ERROR t
+ ERROR e
+ ERROR ?

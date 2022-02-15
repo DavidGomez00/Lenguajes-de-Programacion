@@ -12,6 +12,7 @@ class CoolLexer(Lexer):
               POOL, THEN, WHILE, NUMBER, STR_CONST, LE, DARROW, ASSIGN}
     ignore = '\t \n \r'
     literals = {}
+
     # Ejemplo
     ELSE = r'\b[eE][lL][sS][eE]\b'
     WHILE = r'\b[Ww][Hh][Ii][Ll][Ee]\b'
@@ -25,7 +26,7 @@ class CoolLexer(Lexer):
 
     @_(r'\bt[Rr][Uu][Ee]\b')
     def BOOL_CONST(self, t):
-        t.value = (t.value).lower()
+        t.value = True
         return t
     
     @_(r'\bf[Aa][Ll][Ss][Ee]\b')
@@ -35,6 +36,11 @@ class CoolLexer(Lexer):
 
     @_(r'\b[A-Z]+\b')
     def TYPEID(self, t):
+        t.value = (t.value)
+        return t
+
+    @_(r'.')
+    def ERROR(self, t):
         t.value = (t.value)
         return t
 
