@@ -18,11 +18,6 @@ class CoolLexer(Lexer):
     literals = {}
     # Ejemplo
     ELSE = r'\b[eE][lL][sS][eE]\b'
-    
-    @_(r'[A-Z]+')
-    def TYPEID(self, t):
-        t.value = (t.value) + 'dddd'
-        return t
 
     @_(r'\b[Ww][Hh][Ii][Ll][Ee]\b')
     def TYPEID(self, t):
@@ -54,5 +49,10 @@ class CoolLexer(Lexer):
                 result = f'#{token.lineno} {token.type} {token.value}'
             else:
                 result = f'#{token.lineno} {token.type}'
-                list_strings.append(result)
+            
+            list_strings.append(result)
         return list_strings
+
+
+c = CoolLexer()
+c.salida("while")
