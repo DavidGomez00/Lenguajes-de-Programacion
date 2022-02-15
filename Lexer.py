@@ -5,10 +5,6 @@ import os
 import re
 import sys
 
-
-
-
-
 class CoolLexer(Lexer):
     tokens = {OBJECTID, INT_CONST, BOOL_CONST, TYPEID,
               ELSE, IF, FI, THEN, NOT, IN, CASE, ESAC, CLASS,
@@ -20,6 +16,12 @@ class CoolLexer(Lexer):
     ELSE = r'\b[eE][lL][sS][eE]\b'
     WHILE = r'\b[Ww][Hh][Ii][Ll][Ee]\b'
     INT_CONST = r'\b[0-9]+\b'
+    STR_CONST = r'\b".*"\b'
+    
+    @_(r'[A-Z]+')
+    def TYPEID(self, t):
+        t.value = (t.value) + 'dddd'
+        return t
 
     @_(r'\bt[Rr][Uu][Ee]\b')
     def BOOL_CONST(self, t):
