@@ -5,10 +5,6 @@ import os
 import re
 import sys
 
-
-
-
-
 class CoolLexer(Lexer):
     tokens = {OBJECTID, INT_CONST, BOOL_CONST, TYPEID,
               ELSE, IF, FI, THEN, NOT, IN, CASE, ESAC, CLASS,
@@ -18,6 +14,7 @@ class CoolLexer(Lexer):
     literals = {}
     # Ejemplo
     ELSE = r'\b[eE][lL][sS][eE]\b'
+    STR_CONST = r'\b".*"\b'
     
     @_(r'[A-Z]+')
     def TYPEID(self, t):
@@ -54,5 +51,6 @@ class CoolLexer(Lexer):
                 result = f'#{token.lineno} {token.type} {token.value}'
             else:
                 result = f'#{token.lineno} {token.type}'
-                list_strings.append(result)
+            list_strings.append(result)
         return list_strings
+
