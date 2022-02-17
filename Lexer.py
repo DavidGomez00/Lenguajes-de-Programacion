@@ -35,7 +35,7 @@ class CoolLexer(Lexer):
               POOL, THEN, WHILE, NUMBER, STR_CONST, LE, DARROW, ASSIGN}
 
     # Caracteres especiales
-    ignore = '\t '
+    ignore = '\t \n'
     
     # Literales
     literals = {}
@@ -57,6 +57,12 @@ class CoolLexer(Lexer):
     DARROW = r'\b->\b'
     #LE = r'[Ll][Ee]'
     
+    INHERITS = r'\b[iI][nN][hH][eE][rR][iI][tT][sS]\b'
+    ISVOID = r'\b[iI][sS][vV][oO][iI][dD]\b'
+    LET = r'\b[lL][eE][tT]\b'
+    LOOP = r'\b[lL][oO][oO][pP]\b'
+    NEW = r'\b[nN][eE][wW]\b'
+    OF = r'\b[oO][fF]\b'
     # Definimos las funciones para interpretar los tokens con valor
 
     # Salto de línea
