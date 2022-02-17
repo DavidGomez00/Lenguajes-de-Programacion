@@ -11,7 +11,13 @@ class Comentario(Lexer):
 
     # Tokens
     tokens = {}
-    
+
+    # Función para terminar el comentario
+    @_(r'\*\)')
+    def VOLVER(self, t):
+        # Retorna el flujo al CoolLexer
+        self.begin(CoolLexer)
+
     # Función para ignorar
     @_(r'.')
     def PASAR(self, t):
@@ -21,12 +27,7 @@ class Comentario(Lexer):
     @_(r'\n')
     def SALTO(self, t):
         self.lineno += 1
-
-    # Función para terminar el comentario
-    @_(r'\*\)')
-    def VOLVER(self, t):
-        # Retorna el flujo al CoolLexer
-        self.begin(CoolLexer)
+    
 pass
 
 class CoolLexer(Lexer):
@@ -37,13 +38,10 @@ class CoolLexer(Lexer):
     tokens = {OBJECTID, INT_CONST, BOOL_CONST, TYPEID,
               ELSE, IF, FI, THEN, NOT, IN, CASE, ESAC, CLASS,
               INHERITS, ISVOID, LET, LOOP, NEW, OF,
-              POOL, THEN, WHILE, NUMBER, STR_CONST, LE, DARROW, ASSIGN}
+              POOL, THEN, WHILE, STR_CONST, LE, DARROW, ASSIGN}
 
     # Caracteres especiales
     ignore = '\t '
-    
-    # Literales
-    literals = {}
 
     # Definimos las regex para los distintos tokens
     ELSE = r'\b[eE][lL][sS][eE]\b'
@@ -59,16 +57,18 @@ class CoolLexer(Lexer):
     CASE = r'\b[Cc][Aa][Ss][Ee]\b'
     ESAC = r'[Ee][Ss][Aa][Cc]'
     CLASS = r'\b[Cc][Ll][Aa][Ss][Ss]\b'
-    ASSIGN = r'\b<-\b'
     DARROW = r'\b->\b'
-    #LE = r'[Ll][Ee]'
-    #NUMBER = r'[Nn][Uu][Mm][Bb][Ee][Rr]'
+    LE = r'\b<\b'
     INHERITS = r'\b[iI][nN][hH][eE][rR][iI][tT][sS]\b'
     ISVOID = r'\b[iI][sS][vV][oO][iI][dD]\b'
     LET = r'\b[lL][eE][tT]\b'
     LOOP = r'\b[lL][oO][oO][pP]\b'
     NEW = r'\b[nN][eE][wW]\b'
     OF = r'\b[oO][fF]\b'
+
+    # Literales
+    literals = {';', ':', '{', '}', '(', ')', '~',
+               '.', ',', '+', '/', '=', '@'}
 
     # Definimos las funciones para interpretar los tokens con valor
 
@@ -77,6 +77,10 @@ class CoolLexer(Lexer):
     def SALTO(self, t):
         self.lineno += 1
 
+    # Assign
+    @_(r'\b<-\b')
+    def ASSIGN(self, t):
+        return t
 
     # Bool True
     @_(r'\b(t[Rr][Uu][Ee]|f[Aa][Ll][Ss][Ee])\b')

@@ -1,5 +1,6 @@
 #name "s32.test.cool"
  OBJECTID tricky
+ ':' 
  OBJECTID this
  OBJECTID should
  OBJECTID be
@@ -7,6 +8,8 @@
  OBJECTID as
  OBJECTID an
  OBJECTID error
+ ',' 
  NOT
  OBJECTID two
  OBJECTID tokens
+ ')'

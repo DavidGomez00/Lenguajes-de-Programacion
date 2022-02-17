@@ -15,9 +15,15 @@
  OBJECTID have
  OBJECTID keywords
  OBJECTID inside
+ ':' 
  IF
  ELSE
  CASE
+ '@' 
+ '(' 
+ ')' 
+ '+' 
  INT_CONST 1234567890
+ '=' 
  OBJECTID justanother
  OBJECTID string

@@ -14,6 +14,7 @@
  OBJECTID escaped
  TYPEID This
  OBJECTID is
+ ',' 
  OBJECTID though
  TYPEID It
  OBJECTID s
@@ -21,6 +22,7 @@
  OBJECTID to
  OBJECTID have
  OBJECTID this
+ ':' 
  OBJECTID n
  IN
  OBJECTID a

@@ -1,1 +1,5 @@
 #name "bothcomments.cool"
+ '.' 
+ IF
+ INT_CONST 5
+ THEN

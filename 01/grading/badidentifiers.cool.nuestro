@@ -1,7 +1,10 @@
 #name "badidentifiers.cool"
  OBJECTID inky
+ '.' 
  OBJECTID binky
+ '.' 
  OBJECTID winky
+ '.' 
  OBJECTID dot
  OBJECTID thatwasanumber
  OBJECTID two

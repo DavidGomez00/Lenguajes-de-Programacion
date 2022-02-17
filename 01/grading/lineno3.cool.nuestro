@@ -1,1 +1,12 @@
 #name "lineno3.cool"
+ OBJECTID fourth
+ OBJECTID line
+ ')' 
+ OBJECTID sixth
+ OBJECTID line
+ '+' 
+ OBJECTID abc
+ OBJECTID ninth
+ OBJECTID line
+ TYPEID DEF
+ OBJECTID string
