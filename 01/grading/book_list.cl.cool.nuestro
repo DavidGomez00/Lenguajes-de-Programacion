@@ -1,2 +1,81 @@
 #name "book_list.cl.cool"
- ERROR "EOF in comment"
+ OBJECTID example
+ OF
+ OBJECTID static
+ OBJECTID and
+ OBJECTID dynamic
+ OBJECTID type
+ OBJECTID differing
+ OBJECTID for
+ OBJECTID a
+ OBJECTID dispatch
+ CLASS
+ TYPEID Book
+ INHERITS
+ TYPEID IO
+ OBJECTID title
+ TYPEID String
+ OBJECTID author
+ TYPEID String
+ OBJECTID initBook
+ OBJECTID title_p
+ TYPEID String
+ OBJECTID author_p
+ TYPEID String
+ TYPEID Book
+ OBJECTID title
+ OBJECTID title_p
+ OBJECTID author
+ OBJECTID author_p
+ OBJECTID self
+ OBJECTID print
+ TYPEID Book
+ OBJECTID out_string
+ OBJECTID title
+ OBJECTID out_string
+ OBJECTID title
+ OBJECTID out_string
+ OBJECTID n
+ OBJECTID out_string
+ OBJECTID author
+ OBJECTID out_string
+ OBJECTID author
+ OBJECTID out_string
+ OBJECTID n
+ OBJECTID self
+ CLASS
+ TYPEID Article
+ INHERITS
+ TYPEID Book
+ OBJECTID per_title
+ TYPEID String
+ OBJECTID initArticle
+ OBJECTID title_p
+ TYPEID String
+ OBJECTID author_p
+ TYPEID String
+ OBJECTID per_title_p
+ TYPEID String
+ TYPEID Article
+ OBJECTID initBook
+ OBJECTID title_p
+ OBJECTID author_p
+ OBJECTID per_title
+ OBJECTID per_title_p
+ OBJECTID self
+ OBJECTID print
+ TYPEID Book
+ OBJECTID self
+ TYPEID Book
+ OBJECTID print
+ OBJECTID out_string
+ OBJECTID periodical
+ OBJECTID out_string
+ OBJECTID per_title
+ OBJECTID out_string
+ OBJECTID n
+ OBJECTID self
+ CLASS
+ TYPEID BookList
+ INHERITS
+ TYPEID IO

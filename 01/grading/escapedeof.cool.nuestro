@@ -1,27 +1,8 @@
 #name "escapedeof.cool"
- ERROR "
- ERROR W
- ERROR h
- ERROR a
- ERROR t
- ERROR h
- ERROR a
- ERROR p
- ERROR p
- ERROR e
- ERROR n
- ERROR s
- ERROR i
- ERROR f
+ TYPEID What
+ OBJECTID happens
+ IF
  TYPEID I
- ERROR e
- ERROR s
- ERROR c
- ERROR a
- ERROR p
- ERROR e
- ERROR a
- ERROR n
+ OBJECTID escape
+ OBJECTID an
  TYPEID EOF
- ERROR ?
- ERROR \
