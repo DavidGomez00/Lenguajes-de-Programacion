@@ -1,2 +1,7 @@
 #name "s03.test.cool"
- ERROR "EOF in comment"
+ OBJECTID can
+ OBJECTID they
+ OBJECTID handle
+ TYPEID EOF
+ IN
+ OBJECTID state

@@ -16,6 +16,11 @@ class Comentario(Lexer):
     @_(r'.')
     def PASAR(self, t):
         pass
+    
+    # Salto de línea
+    @_(r'\n')
+    def SALTO(self, t):
+        self.lineno += 1
 
     # Función para terminar el comentario
     @_(r'\*\)')
@@ -35,7 +40,7 @@ class CoolLexer(Lexer):
               POOL, THEN, WHILE, NUMBER, STR_CONST, LE, DARROW, ASSIGN}
 
     # Caracteres especiales
-    ignore = '\t \n'
+    ignore = '\t '
     
     # Literales
     literals = {}
@@ -65,24 +70,19 @@ class CoolLexer(Lexer):
     OF = r'\b[oO][fF]\b'
     # Definimos las funciones para interpretar los tokens con valor
 
-    '''
-        # Salto de línea
-        @_(r'\\n')
-        def SALTO(self, t):
-            self.lineno += 1
-    '''
+    # Salto de línea
+    @_(r'\n')
+    def SALTO(self, t):
+        self.lineno += 1
 
 
     # Bool True
-    @_(r'\bt[Rr][Uu][Ee]\b')
+    @_(r'\b(t[Rr][Uu][Ee]|f[Aa][Ll][Ss][Ee])\b')
     def BOOL_CONST(self, t):
-        t.value = True
-        return t
-    
-    # Bool False
-    @_(r'\bf[Aa][Ll][Ss][Ee]\b')
-    def BOOL_CONST(self, t):
-        t.value = False
+        if t.value[0] == "t":
+            t.value = True
+        else:
+            t.value = False
         return t
 
     # Type Identifier
