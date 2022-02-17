@@ -45,6 +45,8 @@ class CoolLexer(Lexer):
     WHILE = r'\b[Ww][Hh][Ii][Ll][Ee]\b'
     INT_CONST = r'\b[0-9]+\b'
     STR_CONST = r'\b".*"\b'
+    THEN = r'\b[Tt][Hh][Ee][Nn]\b'
+    POOL = r'\b[Pp][Oo][Oo][Ll]\b'    
     IF = r'\b[Ii][Ff]\b'
     FI = r'\b[Ff][Ii]\b'
     NOT = r'\b[Nn][Oo][Tt]\b'
@@ -71,7 +73,7 @@ class CoolLexer(Lexer):
     # Bool False
     @_(r'\bf[Aa][Ll][Ss][Ee]\b')
     def BOOL_CONST(self, t):
-        t.value = (t.value).lower()
+        t.value = False
         return t
 
     # Type Identifier
