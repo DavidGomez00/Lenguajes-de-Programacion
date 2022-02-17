@@ -112,7 +112,7 @@
  OBJECTID d
  OBJECTID y_value
  THEN
- OBJECTID true
+ BOOL_CONST true
  ELSE
  BOOL_CONST false
  FI
