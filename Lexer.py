@@ -66,12 +66,7 @@ class CoolLexer(Lexer):
     # Definimos las funciones para interpretar los tokens con valor
 
     # Salto de línea
-    @_(r'\n')
-    def SALTO(self, t):
-        self.lineno += 1
-
-    # Salto de línea
-    @_(r'\r')
+    @_(r'(\r\n|\r|\n)')
     def SALTO(self, t):
         self.lineno += 1
 
