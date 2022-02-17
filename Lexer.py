@@ -56,15 +56,15 @@ class CoolLexer(Lexer):
     ASSIGN = r'\b<-\b'
     DARROW = r'\b->\b'
     #LE = r'[Ll][Ee]'
-    
+    #NUMBER = r'[Nn][Uu][Mm][Bb][Ee][Rr]'
     INHERITS = r'\b[iI][nN][hH][eE][rR][iI][tT][sS]\b'
     ISVOID = r'\b[iI][sS][vV][oO][iI][dD]\b'
     LET = r'\b[lL][eE][tT]\b'
     LOOP = r'\b[lL][oO][oO][pP]\b'
     NEW = r'\b[nN][eE][wW]\b'
     OF = r'\b[oO][fF]\b'
-    # Definimos las funciones para interpretar los tokens con valor
 
+    # Definimos las funciones para interpretar los tokens con valor
     # Salto de línea
     @_(r'(\n|\r)')
     def SALTO(self, t):
