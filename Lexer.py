@@ -47,6 +47,12 @@ class CoolLexer(Lexer):
     STR_CONST = r'\b".*"\b'
     THEN = r'\b[Tt][Hh][Ee][Nn]\b'
     
+    INHERITS = r'\b[iI][nN][hH][eE][rR][iI][tT][sS]\b'
+    ISVOID = r'\b[iI][sS][vV][oO][iI][dD]\b'
+    LET = r'\b[lL][eE][tT]\b'
+    LOOP = r'\b[lL][oO][oO][pP]\b'
+    NEW = r'\b[nN][eE][wW]\b'
+    OF = r'\b[oO][fF]\b'
     # Definimos las funciones para interpretar los tokens con valor
 
     # Salto de línea
@@ -83,6 +89,8 @@ class CoolLexer(Lexer):
     def COMENTARIO(self, t):
         # Cambia el Lexer a Comentario
         self.begin(Comentario)
+
+    
 
     def error(self, t):
         self.index += 1
