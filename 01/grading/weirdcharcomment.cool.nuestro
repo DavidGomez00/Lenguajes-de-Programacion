@@ -1,28 +1,2 @@
 #name "weirdcharcomment.cool"
- ERROR (
- ERROR *
- ERROR 
- ERROR 
- ERROR 
- ERROR 
- ERROR 
- ERROR 
- ERROR 
- ERROR 
- ERROR 
- ERROR 
- ERROR 
- ERROR 
- ERROR 
- ERROR 
- ERROR 
- ERROR 
- ERROR 
- ERROR 
- ERROR 
- ERROR *
- ERROR )
- ERROR t
- ERROR e
- ERROR s
- ERROR t
+ ERROR "EOF in comment"

@@ -35,7 +35,7 @@ class CoolLexer(Lexer):
               POOL, THEN, WHILE, NUMBER, STR_CONST, LE, DARROW, ASSIGN}
 
     # Caracteres especiales
-    ignore = '\t'
+    ignore = '\t \n'
     
     # Literales
     literals = {}
@@ -65,10 +65,14 @@ class CoolLexer(Lexer):
     OF = r'\b[oO][fF]\b'
 
     # Definimos las funciones para interpretar los tokens con valor
-    # Salto de línea
-    @_(r'(\n|\r)')
-    def SALTO(self, t):
-        self.lineno += 1
+
+    '''
+        # Salto de línea
+        @_(r'\\n')
+        def SALTO(self, t):
+            self.lineno += 1
+    '''
+
 
     # Bool True
     @_(r'\bt[Rr][Uu][Ee]\b')
