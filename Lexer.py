@@ -52,6 +52,7 @@ class CoolLexer(Lexer):
     NOT = r'\b[Nn][Oo][Tt]\b'
     IN = r'\b[Ii][Nn]\b'
     CASE = r'\b[Cc][Aa][Ss][Ee]\b'
+    ESAC = r'[Ee][Ss][Aa][Cc]'
     CLASS = r'\b[Cc][Ll][Aa][Ss][Ss]\b'
     ASSIGN = r'\b<-\b'
     DARROW = r'\b->\b'
