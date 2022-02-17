@@ -35,7 +35,7 @@ class CoolLexer(Lexer):
               POOL, THEN, WHILE, NUMBER, STR_CONST, LE, DARROW, ASSIGN}
 
     # Caracteres especiales
-    ignore = '\t '
+    ignore = '\t \n'
     
     # Literales
     literals = {}
