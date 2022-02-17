@@ -45,6 +45,7 @@ class CoolLexer(Lexer):
     WHILE = r'\b[Ww][Hh][Ii][Ll][Ee]\b'
     INT_CONST = r'\b[0-9]+\b'
     STR_CONST = r'\b".*"\b'
+    THEN = r'\b[Tt][Hh][Ee][Nn]\b'
     
     # Definimos las funciones para interpretar los tokens con valor
 
