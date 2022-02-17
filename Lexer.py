@@ -46,7 +46,7 @@ class CoolLexer(Lexer):
     INT_CONST = r'\b[0-9]+\b'
     STR_CONST = r'\b".*"\b'
     THEN = r'\b[Tt][Hh][Ee][Nn]\b'
-    
+    POOL = r'\b[Pp][Oo][Oo][Ll]\b'    
     # Definimos las funciones para interpretar los tokens con valor
 
     # Salto de línea
@@ -63,7 +63,7 @@ class CoolLexer(Lexer):
     # Bool False
     @_(r'\bf[Aa][Ll][Ss][Ee]\b')
     def BOOL_CONST(self, t):
-        t.value = (t.value).lower()
+        t.value = False
         return t
 
     # Type Identifiers
