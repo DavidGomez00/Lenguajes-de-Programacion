@@ -46,6 +46,16 @@ class CoolLexer(Lexer):
     INT_CONST = r'\b[0-9]+\b'
     STR_CONST = r'\b".*"\b'
     THEN = r'\b[Tt][Hh][Ee][Nn]\b'
+    POOL = r'\b[Pp][Oo][Oo][Ll]\b'    
+    IF = r'\b[Ii][Ff]\b'
+    FI = r'\b[Ff][Ii]\b'
+    NOT = r'\b[Nn][Oo][Tt]\b'
+    IN = r'\b[Ii][Nn]\b'
+    CASE = r'\b[Cc][Aa][Ss][Ee]\b'
+    CLASS = r'\b[Cc][Ll][Aa][Ss][Ss]\b'
+    ASSIGN = r'\b<-\b'
+    DARROW = r'\b->\b'
+    #LE = r'[Ll][Ee]'
     
     INHERITS = r'\b[iI][nN][hH][eE][rR][iI][tT][sS]\b'
     ISVOID = r'\b[iI][sS][vV][oO][iI][dD]\b'
@@ -69,16 +79,16 @@ class CoolLexer(Lexer):
     # Bool False
     @_(r'\bf[Aa][Ll][Ss][Ee]\b')
     def BOOL_CONST(self, t):
-        t.value = (t.value).lower()
+        t.value = False
         return t
 
-    # Type Identifiers
+    # Type Identifier
     @_(r'\b[A-Z][a-zA-Z0-9_]*\b')
     def TYPEID(self, t):
         t.value = (t.value)
         return t
 
-    # Object Identifiers
+    # Object Identifier
     @_(r'[a-z][a-zA-Z0-9_]*')
     def OBJECTID(self, t):
         t.value = (t.value)
@@ -90,8 +100,7 @@ class CoolLexer(Lexer):
         # Cambia el Lexer a Comentario
         self.begin(Comentario)
 
-    
-
+    # Error
     def error(self, t):
         self.index += 1
 
