@@ -40,10 +40,6 @@ class ComentarioSingular(Lexer):
     @_(r'.')
     def PASAR(self, t):
         pass
-
-    @_(r'"')
-    def PASAR(self, t):
-        pass
     
     # Salto de línea
     @_(r'\n')
