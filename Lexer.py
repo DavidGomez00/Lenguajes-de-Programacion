@@ -40,6 +40,10 @@ class ComentarioSingular(Lexer):
     @_(r'.')
     def PASAR(self, t):
         pass
+
+    @_(r'"')
+    def PASAR(self, t):
+        pass
     
     # Salto de línea
     @_(r'\n')
@@ -77,7 +81,7 @@ class CoolLexer(Lexer):
     CASE = r'\b[Cc][Aa][Ss][Ee]\b'
     ESAC = r'[Ee][Ss][Aa][Cc]'
     CLASS = r'\b[Cc][Ll][Aa][Ss][Ss]\b'
-    DARROW = r'\b->\b'
+    DARROW = r'=>'
     LE = r'<='
     INHERITS = r'\b[iI][nN][hH][eE][rR][iI][tT][sS]\b'
     ISVOID = r'\b[iI][sS][vV][oO][iI][dD]\b'
@@ -89,7 +93,7 @@ class CoolLexer(Lexer):
 
     # Literales
     literals = {';', ':', '{', '}', '(', ')', '~',
-               '.', ',', '+', '/', '=', '@', '<', '-', '*'}
+               '.', ',', '+', '/', '=', '@', '<', '>', '-', '*'}
 
     # Definimos las funciones para interpretar los tokens con valor
 

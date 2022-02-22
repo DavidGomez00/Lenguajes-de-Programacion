@@ -4,6 +4,7 @@
  OBJECTID is
  OBJECTID here
  '-'
+ '>'
  ASSIGN
  OBJECTID a
  '+'

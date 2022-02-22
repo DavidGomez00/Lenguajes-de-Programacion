@@ -314,7 +314,7 @@
  OBJECTID dummy
  ':'
  TYPEID Book
- '='
+ DARROW
  OBJECTID out_string
  '('
  STR_CONST "- dynamic type was Book -\n"
@@ -323,7 +323,7 @@
  OBJECTID dummy
  ':'
  TYPEID Article
- '='
+ DARROW
  OBJECTID out_string
  '('
  STR_CONST "- dynamic type was Article -\n"
