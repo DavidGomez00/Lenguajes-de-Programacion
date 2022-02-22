@@ -66,8 +66,8 @@ class CoolLexer(Lexer):
     # Definimos las regex para los distintos tokens
     ELSE = r'\b[eE][lL][sS][eE]\b'
     WHILE = r'\b[Ww][Hh][Ii][Ll][Ee]\b'
+    STR_CONST = r'".*"'
     INT_CONST = r'\b[0-9]+\b'
-    STR_CONST = r'\b".*"\b'
     THEN = r'\b[Tt][Hh][Ee][Nn]\b'
     POOL = r'\b[Pp][Oo][Oo][Ll]\b'    
     IF = r'\b[Ii][Ff]\b'
@@ -78,7 +78,7 @@ class CoolLexer(Lexer):
     ESAC = r'[Ee][Ss][Aa][Cc]'
     CLASS = r'\b[Cc][Ll][Aa][Ss][Ss]\b'
     DARROW = r'\b->\b'
-    LE = r'\b<\b'
+    LE = r'<='
     INHERITS = r'\b[iI][nN][hH][eE][rR][iI][tT][sS]\b'
     ISVOID = r'\b[iI][sS][vV][oO][iI][dD]\b'
     LET = r'\b[lL][eE][tT]\b'
@@ -89,7 +89,7 @@ class CoolLexer(Lexer):
 
     # Literales
     literals = {';', ':', '{', '}', '(', ')', '~',
-               '.', ',', '+', '/', '=', '@'}
+               '.', ',', '+', '/', '=', '@', '<', '-', '*'}
 
     # Definimos las funciones para interpretar los tokens con valor
 
@@ -153,15 +153,13 @@ class CoolLexer(Lexer):
             elif token.type == 'TYPEID':
                 result += f"{str(token.value)}"
             elif token.type in self.literals:
-                result = f'#{token.lineno} \'{token.type}\' '
+                result = f'#{token.lineno} \'{token.type}\''
             elif token.type == 'STR_CONST':
                 result += token.value
             elif token.type == 'INT_CONST':
                 result += str(token.value)
             elif token.type == 'ERROR':
                 result = f'#{token.lineno} {token.type} {token.value}'
-            elif token.type == 'ASSIGN':
-                pass
             else:
                 result = f'#{token.lineno} {token.type}'
             

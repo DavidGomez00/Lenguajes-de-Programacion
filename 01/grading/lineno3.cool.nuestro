@@ -1,8 +1,9 @@
 #name "lineno3.cool"
  OBJECTID fourth
  OBJECTID line
- ')' 
- '+' 
+ '*'
+ ')'
+ '+'
  OBJECTID abc
  TYPEID DEF
- OBJECTID string
+ STR_CONST "string"
