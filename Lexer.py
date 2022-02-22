@@ -65,10 +65,11 @@ class CoolLexer(Lexer):
     LOOP = r'\b[lL][oO][oO][pP]\b'
     NEW = r'\b[nN][eE][wW]\b'
     OF = r'\b[oO][fF]\b'
+    #ASSIGN = r'\b<-\b'
 
     # Literales
     literals = {';', ':', '{', '}', '(', ')', '~',
-               '.', ',', '+', '/', '=', '@'}
+               '.', ',', '+', '/', '=', '@', '<-'}
 
     # Definimos las funciones para interpretar los tokens con valor
 
@@ -76,11 +77,6 @@ class CoolLexer(Lexer):
     @_(r'\n')
     def SALTO(self, t):
         self.lineno += 1
-
-    # Assign
-    @_(r'\b<-\b')
-    def ASSIGN(self, t):
-        return t
 
     # Bool True
     @_(r'\b(t[Rr][Uu][Ee]|f[Aa][Ll][Ss][Ee])\b')
