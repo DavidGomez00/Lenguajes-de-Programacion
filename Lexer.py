@@ -27,8 +27,28 @@ class Comentario(Lexer):
     @_(r'\n')
     def SALTO(self, t):
         self.lineno += 1
+
+
+class ComentarioSingular(Lexer):
+    ''' Clase para interpretar comentarios
+    '''
+
+    # Tokens
+    tokens = {}
     
-pass
+    # Función para ignorar
+    @_(r'.')
+    def PASAR(self, t):
+        pass
+    
+    # Salto de línea
+    @_(r'\n')
+    def VOLVER(self, t):
+        # Retorna el flujo al CoolLexer
+        self.lineno += 1
+        self.begin(CoolLexer)
+        
+
 
 class CoolLexer(Lexer):
     ''' Lexer para interpretar el lenguaje COOL
@@ -77,6 +97,12 @@ class CoolLexer(Lexer):
     @_(r'\n')
     def SALTO(self, t):
         self.lineno += 1
+
+    # Comentario de una sola línea
+    @_(r'--')
+    def COMENTARIO2(self, t):
+        # Cambia el Lexer a Comentario
+        self.begin(ComentarioSingular)
 
     # Bool True
     @_(r'\b(t[Rr][Uu][Ee]|f[Aa][Ll][Ss][Ee])\b')

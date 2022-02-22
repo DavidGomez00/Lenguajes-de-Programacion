@@ -89,14 +89,6 @@
  INT_CONST 0
  ';' 
  '}' 
- OBJECTID the
- INT_CONST 0
- OBJECTID is
- OBJECTID needed
- OBJECTID to
- OBJECTID satisfy
- OBJECTID the
- OBJECTID typchecker
  FI
  FI
  FI
@@ -195,13 +187,6 @@
  ';' 
  ';' 
  '}' 
- OBJECTID the
- OBJECTID is
- OBJECTID needed
- OBJECTID to
- OBJECTID satisfy
- OBJECTID the
- OBJECTID typchecker
  FI
  FI
  FI

@@ -29,12 +29,6 @@
  ')' 
  IN
  '{' 
- OBJECTID trivially
- OBJECTID equal
- '(' 
- OBJECTID see
- TYPEID CoolAid
- ')' 
  IF
  OBJECTID c
  '.' 
@@ -63,7 +57,6 @@
  ')' 
  FI
  ';' 
- OBJECTID equal
  IF
  OBJECTID c
  '.' 

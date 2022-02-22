@@ -2,21 +2,6 @@
  CLASS
  TYPEID A
  '{' 
- LET
- OBJECTID s
- OBJECTID assume
- OBJECTID that
- OBJECTID we
- OBJECTID don
- OBJECTID t
- OBJECTID want
- TYPEID A
- OBJECTID to
- NOT
- OBJECTID inherit
- OBJECTID from
- TYPEID IO
- '.' 
  OBJECTID io
  ':' 
  TYPEID IO
@@ -49,22 +34,6 @@
  INHERITS
  TYPEID A
  '{' 
- TYPEID B
- OBJECTID does
- NOT
- OBJECTID have
- OBJECTID to
- OBJECTID an
- OBJECTID extra
- OBJECTID attribute
- ',' 
- OBJECTID since
- OBJECTID it
- INHERITS
- OBJECTID io
- OBJECTID from
- TYPEID A
- '.' 
  OBJECTID out_b
  '(' 
  ')' 
@@ -90,15 +59,6 @@
  INHERITS
  TYPEID IO
  '{' 
- TYPEID Now
- OBJECTID the
- TYPEID IO
- OBJECTID methods
- OBJECTID are
- OBJECTID part
- OF
- TYPEID C
- '.' 
  OBJECTID out_c
  '(' 
  ')' 
@@ -115,27 +75,6 @@
  ')' 
  '}' 
  ';' 
- TYPEID Note
- OBJECTID that
- OBJECTID out_string
- '(' 
- '.' 
- '.' 
- '.' 
- ')' 
- OBJECTID is
- OBJECTID just
- OBJECTID a
- OBJECTID shorthand
- OBJECTID for
- OBJECTID self
- '.' 
- OBJECTID out_string
- '(' 
- '.' 
- '.' 
- '.' 
- ')' 
  '}' 
  ';' 
  CLASS
@@ -143,12 +82,6 @@
  INHERITS
  TYPEID C
  '{' 
- INHERITS
- TYPEID IO
- OBJECTID methods
- OBJECTID from
- TYPEID C
- '.' 
  OBJECTID out_d
  '(' 
  ')' 
@@ -172,12 +105,6 @@
  INHERITS
  TYPEID IO
  '{' 
- TYPEID Same
- CASE
- OBJECTID as
- CLASS
- TYPEID C
- '.' 
  OBJECTID main
  '(' 
  ')' 
