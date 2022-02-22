@@ -94,6 +94,7 @@
  '{' 
  '{' 
  OBJECTID i
+ ASSIGN 
  '~' 
  INT_CONST 1
  ';' 

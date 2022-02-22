@@ -7,6 +7,7 @@
  OBJECTID a
  ':' 
  TYPEID Razz
+ ASSIGN 
  CASE
  OBJECTID self
  OF
@@ -39,6 +40,7 @@
  OBJECTID b
  ':' 
  TYPEID Int
+ ASSIGN 
  OBJECTID a
  '.' 
  OBJECTID doh
@@ -70,10 +72,12 @@
  OBJECTID i
  ':' 
  TYPEID Int
+ ASSIGN 
  OBJECTID h
  IN
  '{' 
  OBJECTID h
+ ASSIGN 
  OBJECTID h
  '+' 
  INT_CONST 2
@@ -94,6 +98,7 @@
  OBJECTID c
  ':' 
  TYPEID Int
+ ASSIGN 
  OBJECTID doh
  '(' 
  ')' 
@@ -101,6 +106,7 @@
  OBJECTID d
  ':' 
  TYPEID Object
+ ASSIGN 
  OBJECTID printh
  '(' 
  ')' 
@@ -115,6 +121,7 @@
  OBJECTID e
  ':' 
  TYPEID Bar
+ ASSIGN 
  CASE
  OBJECTID self
  OF
@@ -138,6 +145,7 @@
  OBJECTID f
  ':' 
  TYPEID Int
+ ASSIGN 
  OBJECTID a
  '@' 
  TYPEID Bazz
@@ -176,11 +184,13 @@
  OBJECTID h
  ':' 
  TYPEID Int
+ ASSIGN 
  INT_CONST 1
  ';' 
  OBJECTID g
  ':' 
  TYPEID Foo
+ ASSIGN 
  CASE
  OBJECTID self
  OF
@@ -222,6 +232,7 @@
  OBJECTID i
  ':' 
  TYPEID Object
+ ASSIGN 
  OBJECTID printh
  '(' 
  ')' 
@@ -254,10 +265,12 @@
  OBJECTID i
  ':' 
  TYPEID Int
+ ASSIGN 
  OBJECTID h
  IN
  '{' 
  OBJECTID h
+ ASSIGN 
  OBJECTID h
  '+' 
  INT_CONST 1
@@ -276,24 +289,28 @@
  OBJECTID a
  ':' 
  TYPEID Bazz
+ ASSIGN 
  NEW
  TYPEID Bazz
  ';' 
  OBJECTID b
  ':' 
  TYPEID Foo
+ ASSIGN 
  NEW
  TYPEID Foo
  ';' 
  OBJECTID c
  ':' 
  TYPEID Razz
+ ASSIGN 
  NEW
  TYPEID Razz
  ';' 
  OBJECTID d
  ':' 
  TYPEID Bar
+ ASSIGN 
  NEW
  TYPEID Bar
  ';' 

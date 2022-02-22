@@ -5,6 +5,7 @@
  OBJECTID var
  ':' 
  TYPEID Int
+ ASSIGN 
  INT_CONST 0
  ';' 
  OBJECTID value
@@ -27,6 +28,7 @@
  '{' 
  '{' 
  OBJECTID var
+ ASSIGN 
  OBJECTID num
  ';' 
  OBJECTID self
@@ -69,6 +71,7 @@
  IN
  '{' 
  OBJECTID x
+ ASSIGN 
  OBJECTID num1
  '+' 
  OBJECTID num2
@@ -105,6 +108,7 @@
  IN
  '{' 
  OBJECTID x
+ ASSIGN 
  '~' 
  OBJECTID num
  ';' 
@@ -148,6 +152,7 @@
  IN
  '{' 
  OBJECTID x
+ ASSIGN 
  OBJECTID num1
  OBJECTID num2
  ';' 
@@ -172,6 +177,7 @@
  IN
  '{' 
  OBJECTID x
+ ASSIGN 
  OBJECTID num2
  OBJECTID num1
  ';' 
@@ -205,6 +211,7 @@
  OBJECTID x
  ':' 
  TYPEID Int
+ ASSIGN 
  INT_CONST 1
  IN
  '{' 
@@ -213,6 +220,7 @@
  OBJECTID y
  ':' 
  TYPEID Int
+ ASSIGN 
  INT_CONST 1
  IN
  WHILE
@@ -222,10 +230,12 @@
  LOOP
  '{' 
  OBJECTID x
+ ASSIGN 
  OBJECTID x
  OBJECTID y
  ';' 
  OBJECTID y
+ ASSIGN 
  OBJECTID y
  '+' 
  INT_CONST 1
@@ -278,6 +288,7 @@
  IN
  '{' 
  OBJECTID x
+ ASSIGN 
  OBJECTID num
  OBJECTID num
  ';' 
@@ -320,6 +331,7 @@
  IN
  '{' 
  OBJECTID x
+ ASSIGN 
  '~' 
  OBJECTID num
  ';' 
@@ -355,6 +367,7 @@
  IN
  '{' 
  OBJECTID x
+ ASSIGN 
  OBJECTID num
  OBJECTID num
  OBJECTID num
@@ -397,6 +410,7 @@
  OBJECTID x
  ':' 
  TYPEID Int
+ ASSIGN 
  OBJECTID num
  IN
  IF
@@ -467,6 +481,7 @@
  IN
  '{' 
  OBJECTID x
+ ASSIGN 
  OBJECTID num
  '/' 
  INT_CONST 8
@@ -795,6 +810,7 @@
  OBJECTID int
  ':' 
  TYPEID Int
+ ASSIGN 
  INT_CONST 0
  IN
  '{' 
@@ -803,6 +819,7 @@
  OBJECTID j
  ':' 
  TYPEID Int
+ ASSIGN 
  OBJECTID s
  '.' 
  OBJECTID length
@@ -814,6 +831,7 @@
  OBJECTID i
  ':' 
  TYPEID Int
+ ASSIGN 
  INT_CONST 0
  IN
  WHILE
@@ -822,6 +840,7 @@
  LOOP
  '{' 
  OBJECTID int
+ ASSIGN 
  OBJECTID int
  INT_CONST 10
  '+' 
@@ -838,6 +857,7 @@
  ')' 
  ';' 
  OBJECTID i
+ ASSIGN 
  OBJECTID i
  '+' 
  INT_CONST 1
@@ -912,6 +932,7 @@
  OBJECTID next
  ':' 
  TYPEID Int
+ ASSIGN 
  OBJECTID i
  '/' 
  INT_CONST 10
@@ -956,6 +977,7 @@
  OBJECTID flag
  ':' 
  TYPEID Bool
+ ASSIGN 
  BOOL_CONST true
  ';' 
  OBJECTID menu
@@ -1242,6 +1264,7 @@
  OBJECTID z
  ':' 
  TYPEID A2I
+ ASSIGN 
  NEW
  TYPEID A2I
  IN
@@ -1250,6 +1273,7 @@
  OBJECTID s
  ':' 
  TYPEID String
+ ASSIGN 
  OBJECTID prompt
  '(' 
  ')' 
@@ -1280,6 +1304,7 @@
  OBJECTID x
  ':' 
  TYPEID Int
+ ASSIGN 
  OBJECTID num
  IN
  IF
@@ -1426,6 +1451,7 @@
  OBJECTID z
  ':' 
  TYPEID A2I
+ ASSIGN 
  NEW
  TYPEID A2I
  IN
@@ -1460,6 +1486,7 @@
  '{' 
  '{' 
  OBJECTID avar
+ ASSIGN 
  '(' 
  NEW
  TYPEID A
@@ -1470,6 +1497,7 @@
  LOOP
  '{' 
  OBJECTID avar
+ ASSIGN 
  '(' 
  NEW
  TYPEID A
@@ -1531,6 +1559,7 @@
  ')' 
  ';' 
  OBJECTID char
+ ASSIGN 
  OBJECTID menu
  '(' 
  ')' 
@@ -1543,6 +1572,7 @@
  OBJECTID add
  '{' 
  OBJECTID a_var
+ ASSIGN 
  '(' 
  NEW
  TYPEID A
@@ -1556,6 +1586,7 @@
  ')' 
  ';' 
  OBJECTID avar
+ ASSIGN 
  '(' 
  NEW
  TYPEID B
@@ -1592,6 +1623,7 @@
  TYPEID C
  '=' 
  OBJECTID avar
+ ASSIGN 
  OBJECTID c
  '.' 
  OBJECTID method6
@@ -1608,6 +1640,7 @@
  TYPEID A
  '=' 
  OBJECTID avar
+ ASSIGN 
  OBJECTID a
  '.' 
  OBJECTID method3
@@ -1648,6 +1681,7 @@
  OBJECTID diff
  '{' 
  OBJECTID a_var
+ ASSIGN 
  '(' 
  NEW
  TYPEID A
@@ -1661,6 +1695,7 @@
  ')' 
  ';' 
  OBJECTID avar
+ ASSIGN 
  '(' 
  NEW
  TYPEID D
@@ -1689,6 +1724,7 @@
  OBJECTID d
  THEN
  OBJECTID avar
+ ASSIGN 
  '(' 
  NEW
  TYPEID C
@@ -1712,6 +1748,7 @@
  OBJECTID e
  THEN
  OBJECTID avar
+ ASSIGN 
  '(' 
  NEW
  TYPEID C
@@ -1735,6 +1772,7 @@
  OBJECTID f
  THEN
  OBJECTID avar
+ ASSIGN 
  '(' 
  NEW
  TYPEID C
@@ -1778,6 +1816,7 @@
  ')' 
  THEN
  OBJECTID avar
+ ASSIGN 
  '(' 
  NEW
  TYPEID A
@@ -1815,6 +1854,7 @@
  '}' 
  ELSE
  OBJECTID avar
+ ASSIGN 
  '(' 
  NEW
  TYPEID A
@@ -1862,6 +1902,7 @@
  IN
  '{' 
  OBJECTID x
+ ASSIGN 
  '(' 
  NEW
  TYPEID E
@@ -1881,6 +1922,7 @@
  OBJECTID r
  ':' 
  TYPEID Int
+ ASSIGN 
  '(' 
  OBJECTID avar
  '.' 
@@ -1935,6 +1977,7 @@
  OBJECTID a
  ':' 
  TYPEID A2I
+ ASSIGN 
  NEW
  TYPEID A2I
  IN
@@ -1969,6 +2012,7 @@
  OBJECTID r
  ':' 
  OBJECTID avar
+ ASSIGN 
  OBJECTID x
  ';' 
  '}' 
@@ -1984,6 +2028,7 @@
  OBJECTID j
  THEN
  OBJECTID avar
+ ASSIGN 
  '(' 
  NEW
  TYPEID A
@@ -1995,9 +2040,11 @@
  OBJECTID q
  THEN
  OBJECTID flag
+ ASSIGN 
  BOOL_CONST false
  ELSE
  OBJECTID avar
+ ASSIGN 
  '(' 
  NEW
  TYPEID A

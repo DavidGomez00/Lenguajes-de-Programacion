@@ -65,11 +65,11 @@ class CoolLexer(Lexer):
     LOOP = r'\b[lL][oO][oO][pP]\b'
     NEW = r'\b[nN][eE][wW]\b'
     OF = r'\b[oO][fF]\b'
-    #ASSIGN = r'\b<-\b'
+    ASSIGN = r'<-'
 
     # Literales
     literals = {';', ':', '{', '}', '(', ')', '~',
-               '.', ',', '+', '/', '=', '@', '<-'}
+               '.', ',', '+', '/', '=', '@'}
 
     # Definimos las funciones para interpretar los tokens con valor
 
@@ -134,6 +134,8 @@ class CoolLexer(Lexer):
                 result += str(token.value)
             elif token.type == 'ERROR':
                 result = f'#{token.lineno} {token.type} {token.value}'
+            elif token.type == 'ASSIGN':
+                pass
             else:
                 result = f'#{token.lineno} {token.type}'
             

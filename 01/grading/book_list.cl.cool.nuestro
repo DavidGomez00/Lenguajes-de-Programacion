@@ -37,9 +37,11 @@
  '{' 
  '{' 
  OBJECTID title
+ ASSIGN 
  OBJECTID title_p
  ';' 
  OBJECTID author
+ ASSIGN 
  OBJECTID author_p
  ';' 
  OBJECTID self
@@ -128,6 +130,7 @@
  ')' 
  ';' 
  OBJECTID per_title
+ ASSIGN 
  OBJECTID per_title_p
  ';' 
  OBJECTID self
@@ -208,6 +211,7 @@
  OBJECTID new_cell
  ':' 
  TYPEID Cons
+ ASSIGN 
  NEW
  TYPEID Cons
  IN
@@ -341,9 +345,11 @@
  '{' 
  '{' 
  OBJECTID xcar
+ ASSIGN 
  OBJECTID hd
  ';' 
  OBJECTID xcdr
+ ASSIGN 
  OBJECTID tl
  ';' 
  OBJECTID self
@@ -465,6 +471,7 @@
  OBJECTID a_book
  ':' 
  TYPEID Book
+ ASSIGN 
  '(' 
  NEW
  TYPEID Book
@@ -494,6 +501,7 @@
  OBJECTID an_article
  ':' 
  TYPEID Article
+ ASSIGN 
  '(' 
  NEW
  TYPEID Article
@@ -514,6 +522,7 @@
  IN
  '{' 
  OBJECTID books
+ ASSIGN 
  '(' 
  NEW
  TYPEID Nil

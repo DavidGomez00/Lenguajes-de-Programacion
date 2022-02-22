@@ -315,6 +315,7 @@
  OBJECTID int
  ':' 
  TYPEID Int
+ ASSIGN 
  INT_CONST 0
  IN
  '{' 
@@ -323,6 +324,7 @@
  OBJECTID j
  ':' 
  TYPEID Int
+ ASSIGN 
  OBJECTID s
  '.' 
  OBJECTID length
@@ -334,6 +336,7 @@
  OBJECTID i
  ':' 
  TYPEID Int
+ ASSIGN 
  INT_CONST 0
  IN
  WHILE
@@ -342,6 +345,7 @@
  LOOP
  '{' 
  OBJECTID int
+ ASSIGN 
  OBJECTID int
  INT_CONST 10
  '+' 
@@ -358,6 +362,7 @@
  ')' 
  ';' 
  OBJECTID i
+ ASSIGN 
  OBJECTID i
  '+' 
  INT_CONST 1
@@ -432,6 +437,7 @@
  OBJECTID next
  ':' 
  TYPEID Int
+ ASSIGN 
  OBJECTID i
  '/' 
  INT_CONST 10

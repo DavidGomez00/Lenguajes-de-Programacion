@@ -34,6 +34,7 @@
  OBJECTID new_cell
  ':' 
  TYPEID Cons
+ ASSIGN 
  NEW
  TYPEID Cons
  IN
@@ -217,9 +218,11 @@
  '{' 
  '{' 
  OBJECTID xcar
+ ASSIGN 
  OBJECTID hd
  ';' 
  OBJECTID xcdr
+ ASSIGN 
  OBJECTID tl
  ';' 
  OBJECTID self
@@ -484,6 +487,7 @@
  '{' 
  '{' 
  OBJECTID l
+ ASSIGN 
  NEW
  TYPEID Nil
  ';' 
@@ -492,6 +496,7 @@
  OBJECTID j
  ':' 
  TYPEID Int
+ ASSIGN 
  INT_CONST 0
  IN
  WHILE
@@ -500,6 +505,7 @@
  LOOP
  '{' 
  OBJECTID l
+ ASSIGN 
  '(' 
  NEW
  TYPEID Cons
@@ -513,6 +519,7 @@
  ')' 
  ';' 
  OBJECTID j
+ ASSIGN 
  OBJECTID j
  '+' 
  INT_CONST 1

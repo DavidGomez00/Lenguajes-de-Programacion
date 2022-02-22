@@ -46,6 +46,7 @@
  OBJECTID size
  ':' 
  TYPEID Int
+ ASSIGN 
  OBJECTID size_of_board
  '(' 
  OBJECTID start
@@ -59,12 +60,15 @@
  THEN
  '{' 
  OBJECTID rows
+ ASSIGN 
  INT_CONST 3
  ';' 
  OBJECTID columns
+ ASSIGN 
  INT_CONST 5
  ';' 
  OBJECTID board_size
+ ASSIGN 
  OBJECTID size
  ';' 
  '}' 
@@ -76,12 +80,15 @@
  THEN
  '{' 
  OBJECTID rows
+ ASSIGN 
  INT_CONST 4
  ';' 
  OBJECTID columns
+ ASSIGN 
  INT_CONST 4
  ';' 
  OBJECTID board_size
+ ASSIGN 
  OBJECTID size
  ';' 
  '}' 
@@ -93,12 +100,15 @@
  THEN
  '{' 
  OBJECTID rows
+ ASSIGN 
  INT_CONST 4
  ';' 
  OBJECTID columns
+ ASSIGN 
  INT_CONST 5
  ';' 
  OBJECTID board_size
+ ASSIGN 
  OBJECTID size
  ';' 
  '}' 
@@ -110,12 +120,15 @@
  THEN
  '{' 
  OBJECTID rows
+ ASSIGN 
  INT_CONST 3
  ';' 
  OBJECTID columns
+ ASSIGN 
  INT_CONST 7
  ';' 
  OBJECTID board_size
+ ASSIGN 
  OBJECTID size
  ';' 
  '}' 
@@ -127,12 +140,15 @@
  THEN
  '{' 
  OBJECTID rows
+ ASSIGN 
  INT_CONST 5
  ';' 
  OBJECTID columns
+ ASSIGN 
  INT_CONST 5
  ';' 
  OBJECTID board_size
+ ASSIGN 
  OBJECTID size
  ';' 
  '}' 
@@ -144,12 +160,15 @@
  THEN
  '{' 
  OBJECTID rows
+ ASSIGN 
  INT_CONST 7
  ';' 
  OBJECTID columns
+ ASSIGN 
  INT_CONST 4
  ';' 
  OBJECTID board_size
+ ASSIGN 
  OBJECTID size
  ';' 
  '}' 
@@ -173,12 +192,15 @@
  OBJECTID common
  OBJECTID board
  OBJECTID rows
+ ASSIGN 
  INT_CONST 5
  ';' 
  OBJECTID columns
+ ASSIGN 
  INT_CONST 5
  ';' 
  OBJECTID board_size
+ ASSIGN 
  OBJECTID size
  ';' 
  '}' 
@@ -217,6 +239,7 @@
  '{' 
  '{' 
  OBJECTID population_map
+ ASSIGN 
  OBJECTID map
  ';' 
  OBJECTID board_init
@@ -240,6 +263,7 @@
  OBJECTID i
  ':' 
  TYPEID Int
+ ASSIGN 
  INT_CONST 0
  IN
  '(' 
@@ -247,6 +271,7 @@
  OBJECTID num
  ':' 
  TYPEID Int
+ ASSIGN 
  OBJECTID board_size
  IN
  '{' 
@@ -278,6 +303,7 @@
  ')' 
  ';' 
  OBJECTID i
+ ASSIGN 
  OBJECTID i
  '+' 
  OBJECTID columns
@@ -811,6 +837,7 @@
  OBJECTID position
  ':' 
  TYPEID Int
+ ASSIGN 
  INT_CONST 0
  IN
  '(' 
@@ -818,6 +845,7 @@
  OBJECTID num
  ':' 
  TYPEID Int
+ ASSIGN 
  OBJECTID num_cells
  '(' 
  ')' 
@@ -835,6 +863,7 @@
  LOOP
  '{' 
  OBJECTID temp
+ ASSIGN 
  OBJECTID temp
  '.' 
  OBJECTID concat
@@ -846,6 +875,7 @@
  ')' 
  ';' 
  OBJECTID position
+ ASSIGN 
  OBJECTID position
  '+' 
  INT_CONST 1
@@ -854,6 +884,7 @@
  POOL
  ';' 
  OBJECTID population_map
+ ASSIGN 
  OBJECTID temp
  ';' 
  OBJECTID self
@@ -1113,6 +1144,7 @@
  ')' 
  ';' 
  OBJECTID num
+ ASSIGN 
  OBJECTID in_int
  '(' 
  ')' 
@@ -1436,6 +1468,7 @@
  ')' 
  ';' 
  OBJECTID ans
+ ASSIGN 
  OBJECTID in_string
  '(' 
  ')' 
@@ -1509,6 +1542,7 @@
  ')' 
  ';' 
  OBJECTID ans
+ ASSIGN 
  OBJECTID in_string
  '(' 
  ')' 
@@ -1591,14 +1625,17 @@
  LOOP
  '{' 
  OBJECTID continue
+ ASSIGN 
  BOOL_CONST true
  ';' 
  OBJECTID choice
+ ASSIGN 
  OBJECTID option
  '(' 
  ')' 
  ';' 
  OBJECTID cells
+ ASSIGN 
  '(' 
  NEW
  TYPEID CellularAutomaton
@@ -1639,6 +1676,7 @@
  '}' 
  ELSE
  OBJECTID continue
+ ASSIGN 
  BOOL_CONST false
  FI
  POOL
