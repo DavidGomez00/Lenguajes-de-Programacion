@@ -1,9 +1,29 @@
 #name "backslash2.cool"
- STR_CONST "I'm not going to escape this newline
-"
- STR_CONST "This is also not escaped \\
-"
- STR_CONST "This is, though \\\
-"
- STR_CONST "\\"
- STR_CONST "It's fine to have this: \n in a string"
+ TYPEID I
+ OBJECTID m
+ NOT
+ OBJECTID going
+ OBJECTID to
+ OBJECTID escape
+ OBJECTID this
+ OBJECTID newline
+ TYPEID This
+ OBJECTID is
+ OBJECTID also
+ NOT
+ OBJECTID escaped
+ TYPEID This
+ OBJECTID is
+ ','
+ OBJECTID though
+ TYPEID It
+ OBJECTID s
+ OBJECTID fine
+ OBJECTID to
+ OBJECTID have
+ OBJECTID this
+ ':'
+ OBJECTID n
+ IN
+ OBJECTID a
+ OBJECTID string

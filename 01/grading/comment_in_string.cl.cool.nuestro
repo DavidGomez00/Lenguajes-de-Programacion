@@ -1,6 +1,5 @@
 #name "comment_in_string.cl.cool"
- STR_CONST "string (* 123 *) string"
- STR_CONST "string \
-(* 123 *)"
- STR_CONST "string (* \
-123 *)"
+ OBJECTID string
+ OBJECTID string
+ OBJECTID string
+ OBJECTID string
