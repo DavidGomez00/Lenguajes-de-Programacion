@@ -1,5 +1,3 @@
 #name "wq0607-c2.cool"
- '*'
- ')'
- '*'
- ')'
+ STR_CONST "*)"
+ STR_CONST "*)(*"

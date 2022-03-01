@@ -68,7 +68,7 @@ class CoolLexer(Lexer):
     # Definimos las regex para los distintos tokens
     ELSE = r'\b[eE][lL][sS][eE]\b'
     WHILE = r'\b[Ww][Hh][Ii][Ll][Ee]\b'
-    STR_CONST = r'".*"'
+    #STR_CONST = r'".*"'
     INT_CONST = r'\b[0-9]+\b'
     THEN = r'\b[Tt][Hh][Ee][Nn]\b'
     POOL = r'\b[Pp][Oo][Oo][Ll]\b'
@@ -94,6 +94,11 @@ class CoolLexer(Lexer):
                '.', ',', '+', '/', '=', '@', '<', '>', '-', '*'}
 
     # Definimos las funciones para interpretar los tokens con valor
+
+    #string
+    @_(r'"[^"]*"')
+    def STR_CONST(self, t):
+        return t
 
     # Salto de línea
     @_(r'\n')
