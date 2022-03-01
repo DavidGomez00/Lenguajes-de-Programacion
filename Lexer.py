@@ -40,22 +40,60 @@ class ComentarioSingular(Lexer):
     @_(r'.')
     def PASAR(self, t):
         pass
-    
-    # Salto de línea
 
     # Función para ignorar
     @_(r'(.+|["]+)')
     def PASAR(self, t):
         pass
-    
 
-        
+    @_(r'\n')
     def VOLVER(self, t):
         # Retorna el flujo al CoolLexer
         self.lineno += 1
         self.begin(CoolLexer)
-        
 
+class StringLexer(Lexer):
+    ''' Lexer para interpretar Strings.
+    '''
+    _string = ""
+  
+    tokens = {STR_CONST}
+
+    @_(r'(\t)')
+    def TABULACION(self, t):
+      # Tabulación
+      self._string += "\\t"
+
+    @_(r'\\\n')
+    def SALTO(self, t):
+      # Salto de linea
+      self._string += "\\n"
+      self.lineno += 1
+
+    
+    @_(r'\\.')
+    def BACKLASH(self, t):
+      self._string += t.value
+    
+
+    @_(r'[^"\\]')
+    def ACUMULA(self, t):
+      # La coincidencia es parte del String
+      self._string += t.value
+
+
+    @_(r'"')
+    def STR_CONST(self, t):
+      # Retornamos el String
+      t.value = '"' + self._string + '"'
+      self._string = ""
+      # Usamos al lexer de COOL
+      self.begin(CoolLexer)
+      return t
+
+    def error(self, t):
+      self.index += 1
+    
 
 class CoolLexer(Lexer):
     ''' Lexer para interpretar el lenguaje COOL
@@ -73,7 +111,6 @@ class CoolLexer(Lexer):
     # Definimos las regex para los distintos tokens
     ELSE = r'\b[eE][lL][sS][eE]\b'
     WHILE = r'\b[Ww][Hh][Ii][Ll][Ee]\b'
-    STR_CONST = r'".*"'
     INT_CONST = r'\b[0-9]+\b'
     THEN = r'\b[Tt][Hh][Ee][Nn]\b'
     POOL = r'\b[Pp][Oo][Oo][Ll]\b'    
@@ -86,6 +123,7 @@ class CoolLexer(Lexer):
     CLASS = r'\b[Cc][Ll][Aa][Ss][Ss]\b'
     DARROW = r'=>'
     LE = r'<='
+    # STR_CONST = r'"[^"]*"'
     INHERITS = r'\b[iI][nN][hH][eE][rR][iI][tT][sS]\b'
     ISVOID = r'\b[iI][sS][vV][oO][iI][dD]\b'
     LET = r'\b[lL][eE][tT]\b'
@@ -110,6 +148,11 @@ class CoolLexer(Lexer):
     def COMENTARIO2(self, t):
         # Cambia el Lexer a Comentario
         self.begin(ComentarioSingular)
+
+    @_(r'"')
+    def STRING(self, t):
+      # Analizamos lo siguiente con el lexer de Strings.
+      self.begin(StringLexer)
 
     # Bool True
     @_(r'\b(t[Rr][Uu][Ee]|f[Aa][Ll][Ss][Ee])\b')
