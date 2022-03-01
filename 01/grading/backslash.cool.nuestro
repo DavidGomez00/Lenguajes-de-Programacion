@@ -1,6 +1,15 @@
 #name "backslash.cool"
  STR_CONST "\0\1\2\\0\\1\\2\t\f\b\n\r\a\b\c\d\e\f\g"
- STR_CONST "\"this is still inside the string"
+ STR_CONST "\"
+ OBJECTID this
+ OBJECTID is
+ OBJECTID still
+ OBJECTID inside
+ OBJECTID the
+ OBJECTID string
+ STR_CONST "
+
+"
  TYPEID I
  OBJECTID m
  OBJECTID about
