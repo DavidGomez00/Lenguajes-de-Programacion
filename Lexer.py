@@ -35,19 +35,18 @@ class ComentarioSingular(Lexer):
 
     # Tokens
     tokens = {}
-    
-    # Función para ignorar
-    @_(r'.')
-    def PASAR(self, t):
-        pass
-    
+
     # Salto de línea
     @_(r'\n')
     def VOLVER(self, t):
         # Retorna el flujo al CoolLexer
         self.lineno += 1
         self.begin(CoolLexer)
-        
+    
+    # Función para ignorar
+    @_(r'.')
+    def PASAR(self, t):
+        pass
 
 
 class CoolLexer(Lexer):
