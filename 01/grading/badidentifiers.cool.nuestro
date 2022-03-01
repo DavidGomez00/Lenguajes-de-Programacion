@@ -8,9 +8,12 @@
  OBJECTID dot
  OBJECTID thatwasanumber
  OBJECTID two
+ '-' 
  OBJECTID objects
  TYPEID Two
+ '-' 
  TYPEID Types
  OBJECTID underscore
  TYPEID Type
+ '-' 
  OBJECTID object

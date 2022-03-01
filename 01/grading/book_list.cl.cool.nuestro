@@ -348,12 +348,15 @@
  ':' 
  TYPEID Book
  '=' 
+ '>' 
  OBJECTID out_string
  '(' 
+ '-' 
  OBJECTID dynamic
  OBJECTID type
  OBJECTID was
  TYPEID Book
+ '-' 
  OBJECTID n
  ')' 
  ';' 
@@ -361,12 +364,15 @@
  ':' 
  TYPEID Article
  '=' 
+ '>' 
  OBJECTID out_string
  '(' 
+ '-' 
  OBJECTID dynamic
  OBJECTID type
  OBJECTID was
  TYPEID Article
+ '-' 
  OBJECTID n
  ')' 
  ';' 

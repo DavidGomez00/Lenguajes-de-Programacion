@@ -54,6 +54,7 @@
  OBJECTID length
  '(' 
  ')' 
+ '-' 
  INT_CONST 1
  ',' 
  INT_CONST 1
@@ -72,6 +73,7 @@
  OBJECTID length
  '(' 
  ')' 
+ '-' 
  INT_CONST 2
  ')' 
  ')' 

@@ -15,6 +15,7 @@
  ':' 
  TYPEID Razz
  '=' 
+ '>' 
  '(' 
  NEW
  TYPEID Bar
@@ -24,6 +25,7 @@
  ':' 
  TYPEID Foo
  '=' 
+ '>' 
  '(' 
  NEW
  TYPEID Razz
@@ -33,6 +35,7 @@
  ':' 
  TYPEID Bar
  '=' 
+ '>' 
  OBJECTID n
  ';' 
  ESAC
@@ -129,6 +132,7 @@
  ':' 
  TYPEID Razz
  '=' 
+ '>' 
  '(' 
  NEW
  TYPEID Bar
@@ -138,6 +142,7 @@
  ':' 
  TYPEID Bar
  '=' 
+ '>' 
  OBJECTID n
  ';' 
  ESAC
@@ -198,6 +203,7 @@
  ':' 
  TYPEID Bazz
  '=' 
+ '>' 
  '(' 
  NEW
  TYPEID Foo
@@ -207,6 +213,7 @@
  ':' 
  TYPEID Razz
  '=' 
+ '>' 
  '(' 
  NEW
  TYPEID Bar
@@ -216,6 +223,7 @@
  ':' 
  TYPEID Foo
  '=' 
+ '>' 
  '(' 
  NEW
  TYPEID Razz
@@ -225,6 +233,7 @@
  ':' 
  TYPEID Bar
  '=' 
+ '>' 
  OBJECTID n
  ';' 
  ESAC

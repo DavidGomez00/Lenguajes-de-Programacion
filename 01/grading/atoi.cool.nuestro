@@ -229,6 +229,7 @@
  INT_CONST 1
  ')' 
  '=' 
+ '-' 
  THEN
  '~' 
  OBJECTID a2i_aux
@@ -244,6 +245,7 @@
  OBJECTID length
  '(' 
  ')' 
+ '-' 
  INT_CONST 1
  ')' 
  ')' 
@@ -273,6 +275,7 @@
  OBJECTID length
  '(' 
  ')' 
+ '-' 
  INT_CONST 1
  ')' 
  ')' 
@@ -326,6 +329,7 @@
  IN
  WHILE
  OBJECTID i
+ '<' 
  OBJECTID j
  LOOP
  '{' 
@@ -381,6 +385,7 @@
  ELSE
  IF
  INT_CONST 0
+ '<' 
  OBJECTID i
  THEN
  OBJECTID i2a_aux
@@ -388,6 +393,7 @@
  OBJECTID i
  ')' 
  ELSE
+ '-' 
  '.' 
  OBJECTID concat
  '(' 
@@ -437,6 +443,7 @@
  OBJECTID i2c
  '(' 
  OBJECTID i
+ '-' 
  OBJECTID next
  INT_CONST 10
  ')' 

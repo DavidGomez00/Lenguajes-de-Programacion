@@ -33,7 +33,7 @@ if True:
         if os.path.isfile(os.path.join(DIR, fich)+'.nuestro'):
             os.remove(os.path.join(DIR, fich)+'.nuestro')
         if os.path.isfile(os.path.join(DIR, fich)+'.bien'):
-            os.remove(os.path.join(DIR, fich)+'.bien')            
+            os.remove(os.path.join(DIR, fich)+'.bien')
         texto = ''
         entrada = f.read()
         f.close()
@@ -92,4 +92,3 @@ if True:
                         g.close()
             except Exception as e:
                 print(f"Lanza excepción en {fich} con el texto {e}")
-

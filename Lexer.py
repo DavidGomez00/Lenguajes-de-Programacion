@@ -22,7 +22,7 @@ class Comentario(Lexer):
     @_(r'.')
     def PASAR(self, t):
         pass
-    
+
     # Salto de línea
     @_(r'\n')
     def SALTO(self, t):
@@ -35,19 +35,19 @@ class ComentarioSingular(Lexer):
 
     # Tokens
     tokens = {}
-    
+
     # Función para ignorar
     @_(r'.')
     def PASAR(self, t):
         pass
-    
+
     # Salto de línea
     @_(r'\n')
     def VOLVER(self, t):
         # Retorna el flujo al CoolLexer
         self.lineno += 1
         self.begin(CoolLexer)
-        
+
 
 
 class CoolLexer(Lexer):
@@ -69,7 +69,7 @@ class CoolLexer(Lexer):
     INT_CONST = r'\b[0-9]+\b'
     STR_CONST = r'\b".*"\b'
     THEN = r'\b[Tt][Hh][Ee][Nn]\b'
-    POOL = r'\b[Pp][Oo][Oo][Ll]\b'    
+    POOL = r'\b[Pp][Oo][Oo][Ll]\b'
     IF = r'\b[Ii][Ff]\b'
     FI = r'\b[Ff][Ii]\b'
     NOT = r'\b[Nn][Oo][Tt]\b'
@@ -78,7 +78,7 @@ class CoolLexer(Lexer):
     ESAC = r'[Ee][Ss][Aa][Cc]'
     CLASS = r'\b[Cc][Ll][Aa][Ss][Ss]\b'
     DARROW = r'\b->\b'
-    LE = r'\b<\b'
+    LE = r'<='
     INHERITS = r'\b[iI][nN][hH][eE][rR][iI][tT][sS]\b'
     ISVOID = r'\b[iI][sS][vV][oO][iI][dD]\b'
     LET = r'\b[lL][eE][tT]\b'
@@ -89,7 +89,7 @@ class CoolLexer(Lexer):
 
     # Literales
     literals = {';', ':', '{', '}', '(', ')', '~',
-               '.', ',', '+', '/', '=', '@'}
+               '.', ',', '+', '/', '=', '@', '<', '>', '-'}
 
     # Definimos las funciones para interpretar los tokens con valor
 
@@ -135,7 +135,7 @@ class CoolLexer(Lexer):
     def error(self, t):
         self.index += 1
 
-    
+
 
     CARACTERES_CONTROL = [bytes.fromhex(i+hex(j)[-1]).decode('ascii')
                           for i in ['0', '1']
@@ -164,6 +164,6 @@ class CoolLexer(Lexer):
                 pass
             else:
                 result = f'#{token.lineno} {token.type}'
-            
+
             list_strings.append(result)
         return list_strings

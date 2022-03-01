@@ -138,6 +138,7 @@
  '{' 
  IF
  OBJECTID num2
+ '<' 
  OBJECTID num1
  THEN
  '(' 
@@ -150,6 +151,7 @@
  OBJECTID x
  ASSIGN 
  OBJECTID num1
+ '-' 
  OBJECTID num2
  ';' 
  '(' 
@@ -175,6 +177,7 @@
  OBJECTID x
  ASSIGN 
  OBJECTID num2
+ '-' 
  OBJECTID num1
  ';' 
  '(' 
@@ -220,7 +223,7 @@
  IN
  WHILE
  OBJECTID y
- '=' 
+ LE
  OBJECTID num
  LOOP
  '{' 
@@ -399,6 +402,7 @@
  IN
  IF
  OBJECTID x
+ '<' 
  INT_CONST 0
  THEN
  OBJECTID method7
@@ -431,6 +435,7 @@
  OBJECTID method7
  '(' 
  OBJECTID x
+ '-' 
  INT_CONST 3
  ')' 
  FI
@@ -715,6 +720,7 @@
  INT_CONST 1
  ')' 
  '=' 
+ '-' 
  THEN
  '~' 
  OBJECTID a2i_aux
@@ -730,6 +736,7 @@
  OBJECTID length
  '(' 
  ')' 
+ '-' 
  INT_CONST 1
  ')' 
  ')' 
@@ -759,6 +766,7 @@
  OBJECTID length
  '(' 
  ')' 
+ '-' 
  INT_CONST 1
  ')' 
  ')' 
@@ -812,6 +820,7 @@
  IN
  WHILE
  OBJECTID i
+ '<' 
  OBJECTID j
  LOOP
  '{' 
@@ -867,6 +876,7 @@
  ELSE
  IF
  INT_CONST 0
+ '<' 
  OBJECTID i
  THEN
  OBJECTID i2a_aux
@@ -874,6 +884,7 @@
  OBJECTID i
  ')' 
  ELSE
+ '-' 
  '.' 
  OBJECTID concat
  '(' 
@@ -923,6 +934,7 @@
  OBJECTID i2c
  '(' 
  OBJECTID i
+ '-' 
  OBJECTID next
  INT_CONST 10
  ')' 
@@ -1285,6 +1297,7 @@
  IN
  IF
  OBJECTID x
+ '<' 
  INT_CONST 0
  THEN
  OBJECTID is_even
@@ -1310,6 +1323,7 @@
  OBJECTID is_even
  '(' 
  OBJECTID x
+ '-' 
  INT_CONST 2
  ')' 
  FI
@@ -1334,6 +1348,7 @@
  ':' 
  TYPEID A
  '=' 
+ '>' 
  OBJECTID out_string
  '(' 
  CLASS
@@ -1348,6 +1363,7 @@
  ':' 
  TYPEID B
  '=' 
+ '>' 
  OBJECTID out_string
  '(' 
  CLASS
@@ -1362,6 +1378,7 @@
  ':' 
  TYPEID C
  '=' 
+ '>' 
  OBJECTID out_string
  '(' 
  CLASS
@@ -1376,6 +1393,7 @@
  ':' 
  TYPEID D
  '=' 
+ '>' 
  OBJECTID out_string
  '(' 
  CLASS
@@ -1390,6 +1408,7 @@
  ':' 
  TYPEID E
  '=' 
+ '>' 
  OBJECTID out_string
  '(' 
  CLASS
@@ -1404,6 +1423,7 @@
  ':' 
  TYPEID Object
  '=' 
+ '>' 
  OBJECTID out_string
  '(' 
  TYPEID Oooops
@@ -1574,6 +1594,7 @@
  ':' 
  TYPEID C
  '=' 
+ '>' 
  OBJECTID avar
  ASSIGN 
  OBJECTID c
@@ -1591,6 +1612,7 @@
  ':' 
  TYPEID A
  '=' 
+ '>' 
  OBJECTID avar
  ASSIGN 
  OBJECTID a
@@ -1608,6 +1630,7 @@
  ':' 
  TYPEID Object
  '=' 
+ '>' 
  '{' 
  OBJECTID out_string
  '(' 
@@ -1848,6 +1871,7 @@
  OBJECTID value
  '(' 
  ')' 
+ '-' 
  '(' 
  OBJECTID x
  '.' 

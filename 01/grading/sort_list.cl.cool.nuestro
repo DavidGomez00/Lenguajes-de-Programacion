@@ -264,6 +264,7 @@
  '{' 
  IF
  OBJECTID i
+ '<' 
  OBJECTID xcar
  THEN
  '(' 
@@ -466,6 +467,7 @@
  IN
  WHILE
  OBJECTID j
+ '<' 
  OBJECTID i
  LOOP
  '{' 
