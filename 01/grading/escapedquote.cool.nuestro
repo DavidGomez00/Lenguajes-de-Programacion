@@ -1,6 +1,2 @@
 #name "escapedquote.cool"
- OBJECTID string
- OBJECTID with
- OBJECTID no
- OBJECTID closing
- OBJECTID quote
+ STR_CONST "string with no closing quote\"

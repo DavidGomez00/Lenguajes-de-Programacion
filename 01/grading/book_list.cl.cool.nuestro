@@ -48,34 +48,12 @@
  '{'
  OBJECTID out_string
  '('
- OBJECTID title
- ':'
- ')'
- '.'
- OBJECTID out_string
- '('
- OBJECTID title
- ')'
- '.'
- OBJECTID out_string
- '('
- OBJECTID n
+ STR_CONST "title:      ").out_string(title).out_string("\n"
  ')'
  ';'
  OBJECTID out_string
  '('
- OBJECTID author
- ':'
- ')'
- '.'
- OBJECTID out_string
- '('
- OBJECTID author
- ')'
- '.'
- OBJECTID out_string
- '('
- OBJECTID n
+ STR_CONST "author:     ").out_string(author).out_string("\n"
  ')'
  ';'
  OBJECTID self
@@ -145,18 +123,7 @@
  ';'
  OBJECTID out_string
  '('
- OBJECTID periodical
- ':'
- ')'
- '.'
- OBJECTID out_string
- '('
- OBJECTID per_title
- ')'
- '.'
- OBJECTID out_string
- '('
- OBJECTID n
+ STR_CONST "periodical:  ").out_string(per_title).out_string("\n"
  ')'
  ';'
  OBJECTID self
@@ -350,13 +317,7 @@
  DARROW
  OBJECTID out_string
  '('
- '-'
- OBJECTID dynamic
- OBJECTID type
- OBJECTID was
- TYPEID Book
- '-'
- OBJECTID n
+ STR_CONST "- dynamic type was Book -\n"
  ')'
  ';'
  OBJECTID dummy
@@ -365,13 +326,7 @@
  DARROW
  OBJECTID out_string
  '('
- '-'
- OBJECTID dynamic
- OBJECTID type
- OBJECTID was
- TYPEID Article
- '-'
- OBJECTID n
+ STR_CONST "- dynamic type was Article -\n"
  ')'
  ';'
  ESAC
@@ -438,21 +393,9 @@
  '.'
  OBJECTID initBook
  '('
- TYPEID Compilers
+ STR_CONST "Compilers, Principles, Techniques, and Tools"
  ','
- TYPEID Principles
- ','
- TYPEID Techniques
- ','
- OBJECTID and
- TYPEID Tools
- ','
- TYPEID Aho
- ','
- TYPEID Sethi
- ','
- OBJECTID and
- TYPEID Ullman
+ STR_CONST "Aho, Sethi, and Ullman"
  ')'
  IN
  '('
@@ -468,15 +411,11 @@
  '.'
  OBJECTID initArticle
  '('
- TYPEID The
- TYPEID Top
- INT_CONST 100
- TYPEID CD_ROMs
+ STR_CONST "The Top 100 CD_ROMs"
  ','
- TYPEID Ulanoff
+ STR_CONST "Ulanoff"
  ','
- TYPEID PC
- TYPEID Magazine
+ STR_CONST "PC Magazine"
  ')'
  IN
  '{'

@@ -22,7 +22,7 @@ class Comentario(Lexer):
     @_(r'.')
     def PASAR(self, t):
         pass
-
+    
     # Salto de línea
     @_(r'\n')
     def SALTO(self, t):
@@ -35,7 +35,7 @@ class ComentarioSingular(Lexer):
 
     # Tokens
     tokens = {}
-
+    
     # Salto de línea
     @_(r'\n')
     def VOLVER(self, t):
@@ -47,9 +47,9 @@ class ComentarioSingular(Lexer):
     @_(r'(.+|["]+)')
     def PASAR(self, t):
         pass
+    
 
-
-
+        
 
 
 class CoolLexer(Lexer):
@@ -71,7 +71,7 @@ class CoolLexer(Lexer):
     STR_CONST = r'".*"'
     INT_CONST = r'\b[0-9]+\b'
     THEN = r'\b[Tt][Hh][Ee][Nn]\b'
-    POOL = r'\b[Pp][Oo][Oo][Ll]\b'
+    POOL = r'\b[Pp][Oo][Oo][Ll]\b'    
     IF = r'\b[Ii][Ff]\b'
     FI = r'\b[Ff][Ii]\b'
     NOT = r'\b[Nn][Oo][Tt]\b'
@@ -137,7 +137,7 @@ class CoolLexer(Lexer):
     def error(self, t):
         self.index += 1
 
-
+    
 
     CARACTERES_CONTROL = [bytes.fromhex(i+hex(j)[-1]).decode('ascii')
                           for i in ['0', '1']
@@ -164,6 +164,6 @@ class CoolLexer(Lexer):
                 result = f'#{token.lineno} {token.type} {token.value}'
             else:
                 result = f'#{token.lineno} {token.type}'
-
+            
             list_strings.append(result)
         return list_strings

@@ -16,14 +16,5 @@
  OBJECTID is
  ','
  OBJECTID though
- TYPEID It
- OBJECTID s
- OBJECTID fine
- OBJECTID to
- OBJECTID have
- OBJECTID this
- ':'
- OBJECTID n
- IN
- OBJECTID a
- OBJECTID string
+ STR_CONST "\\"
+ STR_CONST "It's fine to have this: \n in a string"

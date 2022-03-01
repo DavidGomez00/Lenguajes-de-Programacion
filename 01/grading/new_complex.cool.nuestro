@@ -44,16 +44,12 @@
  THEN
  OBJECTID out_string
  '('
- '='
- ')'
- OBJECTID n
+ STR_CONST "=)\n"
  ')'
  ELSE
  OBJECTID out_string
  '('
- '='
- '('
- OBJECTID n
+ STR_CONST "=(\n"
  ')'
  FI
  ';'
@@ -79,16 +75,12 @@
  THEN
  OBJECTID out_string
  '('
- '='
- ')'
- OBJECTID n
+ STR_CONST "=)\n"
  ')'
  ELSE
  OBJECTID out_string
  '('
- '='
- '('
- OBJECTID n
+ STR_CONST "=(\n"
  ')'
  FI
  ';'
@@ -161,17 +153,7 @@
  '.'
  OBJECTID out_string
  '('
- '+'
- ')'
- '.'
- OBJECTID out_int
- '('
- OBJECTID y
- ')'
- '.'
- OBJECTID out_string
- '('
- TYPEID I
+ STR_CONST "+").out_int(y).out_string("I"
  ')'
  FI
  '}'
