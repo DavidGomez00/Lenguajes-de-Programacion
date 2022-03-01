@@ -6,4 +6,4 @@
  '+'
  OBJECTID abc
  TYPEID DEF
- STR_CONST "string"
+ OBJECTID string
