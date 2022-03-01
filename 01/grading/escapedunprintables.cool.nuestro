@@ -1,27 +1,6 @@
 #name "escapedunprintables.cool"
- TYPEID This
- OBJECTID is
- OBJECTID a
- OBJECTID tab
- ':' 
- TYPEID This
- OBJECTID is
- OBJECTID a
- OBJECTID backspace
- ':' 
- TYPEID This
- OBJECTID is
- OBJECTID a
- OBJECTID formfeed
- ':' 
- TYPEID This
- OBJECTID is
- OBJECTID a
- OBJECTID carriage
- OBJECTID return
- ':' 
- TYPEID This
- OBJECTID is
- OBJECTID an
- OBJECTID escape
- ':'
+ STR_CONST "This is a tab:\	"
+ STR_CONST "This is a backspace:\"
+ STR_CONST "This is a formfeed:\"
+ STR_CONST "This is a carriage return:"
+ STR_CONST "This is an escape:"

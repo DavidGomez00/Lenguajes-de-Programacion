@@ -3,8 +3,8 @@
  OBJECTID character
  OBJECTID is
  OBJECTID here
- '-' 
- '>' 
- ASSIGN 
+ '-'
+ '>'
+ ASSIGN
  OBJECTID a
  '+'
