@@ -55,7 +55,11 @@ class ComentarioSingular(Lexer):
         self.lineno += 1
         self.begin(CoolLexer)
         
+class StringLexer(Lexer):
+    ''' Clase para inerpretar los strings.
+    '''
 
+    tokens = {STR_CONST}
 
 class CoolLexer(Lexer):
     ''' Lexer para interpretar el lenguaje COOL
