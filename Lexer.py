@@ -12,11 +12,21 @@ class Comentario(Lexer):
     # Tokens
     tokens = {}
 
+    cuenta = 1
+
+    # Otro comentario
+    @_(r'[^\\]\(\*')
+    def COMENTARIO_ANIDADO(self, t):
+      self.cuenta += 1
+
     # Función para terminar el comentario
-    @_(r'\*\)')
+    @_(r'[^\\]\*\)')
     def VOLVER(self, t):
-        # Retorna el flujo al CoolLexer
-        self.begin(CoolLexer)
+        self.cuenta -= 1
+        if (self.cuenta == 0):
+          self.cuenta = 1
+          # Retorna el flujo al CoolLexer
+          self.begin(CoolLexer)
 
     # Función para ignorar
     @_(r'.')
@@ -27,6 +37,9 @@ class Comentario(Lexer):
     @_(r'\n')
     def SALTO(self, t):
         self.lineno += 1
+
+
+
 
 
 class ComentarioSingular(Lexer):
@@ -52,14 +65,29 @@ class ComentarioSingular(Lexer):
         self.lineno += 1
         self.begin(CoolLexer)
 
+
+
+
 class StringLexer(Lexer):
     ''' Lexer para interpretar Strings.
     '''
     _string = ""
   
-    tokens = {STR_CONST}
+    tokens = {STR_CONST, ERROR}
+    
+    
+    @_(r'\\\n$')
+    def ERRORT(self, t):
+      print('Error detectado')
+      t.value = '"' + "EOF in string constant" + '"'
+      t.type = 'ERROR'
+      self._string = ""
+      self.begin(CoolLexer)
+      return t
+    
 
-    @_(r'(\t)')
+      
+    @_(r'\\\t')
     def TABULACION(self, t):
       # Tabulación
       self._string += "\\t"
@@ -67,20 +95,23 @@ class StringLexer(Lexer):
     @_(r'\\\n')
     def SALTO(self, t):
       # Salto de linea
+      # print("salto")
       self._string += "\\n"
       self.lineno += 1
 
+    @_(r'\\[nbft"]')
+    def BARRAENE(self, t):
+      # Literal '\n'
+      self._string += "\\" + t.value[1:]
+
+    @_(r'\\\\')
+    def BARRABARRA(self, t):
+      # Dos \\ seguidas
+      self._string += "\\\\"
     
-    @_(r'\\.')
+    @_(r'\\[^\\]')
     def BACKLASH(self, t):
-      self._string += t.value
-    
-
-    @_(r'[^"\\]')
-    def ACUMULA(self, t):
-      # La coincidencia es parte del String
-      self._string += t.value
-
+      self._string += t.value[1:]
 
     @_(r'"')
     def STR_CONST(self, t):
@@ -91,8 +122,34 @@ class StringLexer(Lexer):
       self.begin(CoolLexer)
       return t
 
-    def error(self, t):
-      self.index += 1
+    @_(r'\n')
+    def ERROR(self, t):
+      t.value = '"' + "Unterminated string constant" + '"'
+      self._string = ""
+      # Return to Cool Lexer
+      self.begin(CoolLexer)
+      return t
+
+    '''
+        @_(r'.$')
+    def ERROREOF(self, t):
+      t.value = '"' + "EOF in string constant" + '"'
+      self._string = ""
+      # Return to Cool Lexer
+      self.begin(CoolLexer)
+      return t
+    
+    '''
+
+  
+    
+
+    
+        
+    @_(r'[^"\\]')
+    def ACUMULA(self, t):
+      # La coincidencia es parte del String
+      self._string += t.value
     
 
 class CoolLexer(Lexer):
@@ -103,7 +160,7 @@ class CoolLexer(Lexer):
     tokens = {OBJECTID, INT_CONST, BOOL_CONST, TYPEID,
               ELSE, IF, FI, THEN, NOT, IN, CASE, ESAC, CLASS,
               INHERITS, ISVOID, LET, LOOP, NEW, OF,
-              POOL, THEN, WHILE, STR_CONST, LE, DARROW, ASSIGN}
+              POOL, THEN, WHILE, STR_CONST, LE, DARROW, ASSIGN, ERROR}
 
     # Caracteres especiales
     ignore = '\t '
@@ -111,7 +168,7 @@ class CoolLexer(Lexer):
     # Definimos las regex para los distintos tokens
     ELSE = r'\b[eE][lL][sS][eE]\b'
     WHILE = r'\b[Ww][Hh][Ii][Ll][Ee]\b'
-    INT_CONST = r'\b[0-9]+\b'
+    INT_CONST = r'[0-9]+'
     THEN = r'\b[Tt][Hh][Ee][Nn]\b'
     POOL = r'\b[Pp][Oo][Oo][Ll]\b'    
     IF = r'\b[Ii][Ff]\b'
@@ -123,7 +180,6 @@ class CoolLexer(Lexer):
     CLASS = r'\b[Cc][Ll][Aa][Ss][Ss]\b'
     DARROW = r'=>'
     LE = r'<='
-    # STR_CONST = r'"[^"]*"'
     INHERITS = r'\b[iI][nN][hH][eE][rR][iI][tT][sS]\b'
     ISVOID = r'\b[iI][sS][vV][oO][iI][dD]\b'
     LET = r'\b[lL][eE][tT]\b'
@@ -182,9 +238,24 @@ class CoolLexer(Lexer):
         self.begin(Comentario)
 
     # Error
-    def error(self, t):
-        self.index += 1
+    @_(r'_')
+    def ERROR(self, t):
+        # Change value
+        t.value = '"' + t.value + '"'
+        # Return error
+        return t
+      
+    @_(r'(\*\)|_)')
+    def ERROR(self, t):
+        if (t.value == "*)"):
+          t.value = '"' + "Unmatched *)" + '"'
+        else:
+          t.value = '"' + t.value + '"'
+        return t
 
+    def error(self, t):
+        # 
+        self.index += 1
     
 
     CARACTERES_CONTROL = [bytes.fromhex(i+hex(j)[-1]).decode('ascii')
