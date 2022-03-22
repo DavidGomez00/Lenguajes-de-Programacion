@@ -96,17 +96,23 @@ class StringLexer(Lexer):
     
     @_(r'"')
     def STR_CONST(self, t):
-      # Retornamos el String
-      t.value = '"' + self._string + '"'
-      '''
-      # Check for errors
-      if self._tooLong:
+
+      # Check lenght
+      if self.contador > 1024:
         t.type = 'ERROR'
         t.value = '"' + "String constant too long" + '"'
-      '''
+        # Reseteamos los parámetros
+        self._string = ""
+        self.contador = 0
+        # Usamos el CoolLexer
+        self.begin(CoolLexer)
+        return t
+      
+      # Retornamos el String
+      t.value = '"' + self._string + '"'
       # Reseteamos los parámetros
       self._string = ""
-      self._tooLong = False
+      self.contador = 0
       # Usamos al lexer de COOL
       self.begin(CoolLexer)
       return t
@@ -118,8 +124,8 @@ class StringLexer(Lexer):
       t.type = 'ERROR'
       
       # Reseteamos parámetros
-      self._tooLong = False
       self._string = ""
+      self.contador = 0
 
       # Usamos el CoolLexer
       self.begin(CoolLexer)
@@ -133,7 +139,7 @@ class StringLexer(Lexer):
 
       # Reseteamos parámetros
       self._string = ""
-      self._tooLong = False
+      self.contador = 0
 
       # Usamos el CoolLexer
       self.begin(CoolLexer)
@@ -144,112 +150,42 @@ class StringLexer(Lexer):
       #print("TABULACION")
       # Tabulación
       self._string += "\\t"
-      # Check lenght
-      if self.contador > 1024 and not self._tooLong:
-        '''
-        self._tooLong = True
-        '''
-        t.type = 'ERROR'
-        t.value = '"' + "String constant too long" + '"'
-        # Reseteamos los parámetros
-        self._string = ""
-        # Usamos el CoolLexer
-        self.begin(CoolLexer)
-        return t
         
-        print("TABULACION")
-
     @_(r'\\\n')
     def SALTO(self, t):
       #print("SALTO")
       # Salto de linea
       self._string += "\\n"
       self.lineno += 1
-      # Check lenght
-      if self.contador > 1024 and not self._tooLong:
-        '''
-        self._tooLong = True
-        '''
-        t.type = 'ERROR'
-        t.value = '"' + "String constant too long" + '"'
-        # Reseteamos los parámetros
-        self._string = ""
-        # Usamos el CoolLexer
-        self.begin(CoolLexer)
-        return t
-        print("SALTO")
+      self.contador += 1
+
       
     @_(r'\\[\b]')
     def BACKSPACE(self, t):
       #print("BACKSPACE")
       # Salto de b
       self._string += "\\b"
-      # Check lenght
-      if self.contador > 1024 and not self._tooLong:
-        '''
-        self._tooLong = True
-        '''
-        t.type = 'ERROR'
-        t.value = '"' + "String constant too long" + '"'
-        # Reseteamos los parámetros
-        self._string = ""
-        # Usamos el CoolLexer
-        self.begin(CoolLexer)
-        return t
+
       
     @_(r'\\[\f]')
     def FORMFEED(self, t):
       #print("FORMFEED")
       # Salto de b
       self._string += "\\f"
-      # Check lenght
-      if self.contador > 1024 and not self._tooLong:
-        '''
-        self._tooLong = True
-        '''
-        t.type = 'ERROR'
-        t.value = '"' + "String constant too long" + '"'
-        # Reseteamos los parámetros
-        self._string = ""
-        # Usamos el CoolLexer
-        self.begin(CoolLexer)
-        return t
 
     @_(r'\r')
     def CARRIAGERETURN(self, t):
       #print("CARRIAGERETURN")
       # Salto de b
       self._string += "\\015"
-      # Check lenght
-      if self.contador > 1024 and not self._tooLong:
-        '''
-        self._tooLong = True
-        '''
-        t.type = 'ERROR'
-        t.value = '"' + "String constant too long" + '"'
-        # Reseteamos los parámetros
-        self._string = ""
-        # Usamos el CoolLexer
-        self.begin(CoolLexer)
-        return t
+
 
     @_(r'\033')
     def ESCAPEKEY(self, t):
       #print("ESCAPEKEY")
       # Salto de b
       self._string += "\\033"
-      # Check lenght
-      if self.contador > 1024 and not self._tooLong:
-        '''
-        self._tooLong = True
-        '''
-        t.type = 'ERROR'
-        t.value = '"' + "String constant too long" + '"'
-        # Reseteamos los parámetros
-        self._string = ""
-        # Usamos el CoolLexer
-        self.begin(CoolLexer)
-        return t
+
     
     @_(r'\\[nbft"]')
     def BARRAENE(self, t):
@@ -257,56 +193,22 @@ class StringLexer(Lexer):
       # Literal '\n'
       self._string += "\\" + t.value[1:]
       self.contador += 2
-      # Check lenght
-      if self.contador > 1024 and not self._tooLong:
-        '''
-        self._tooLong = True
-        '''
-        t.type = 'ERROR'
-        t.value = '"' + "String constant too long" + '"'
-        # Reseteamos los parámetros
-        self._string = ""
-        # Usamos el CoolLexer
-        self.begin(CoolLexer)
-        return t
+
 
     @_(r'\\\\')
     def BARRABARRA(self, t):
       #print("BARRABARRA")
       # Dos \\ seguidas
       self._string += "\\\\"
-      self.contador += 2
-      # Check lenght
-      if self.contador > 1024 and not self._tooLong:
-        '''
-        self._tooLong = True
-        '''
-        t.type = 'ERROR'
-        t.value = '"' + "String constant too long" + '"'
-        # Reseteamos los parámetros
-        self._string = ""
-        # Usamos el CoolLexer
-        self.begin(CoolLexer)
-        return t
+      self.contador += 1
+
     
     @_(r'\\[^\\]')
     def BACKLASH(self, t):
       #print("BACKLASH")
       self._string += t.value[1:]
       self.contador += 2
-      # Check lenght
-      if self.contador > 1024 and not self._tooLong:
-        '''
-        self._tooLong = True
-        '''
-        t.type = 'ERROR'
-        t.value = '"' + "String constant too long" + '"'
-        # Reseteamos los parámetros
-        self._string = ""
-        # Usamos el CoolLexer
-        self.begin(CoolLexer)
-        return t
-        print("BACKLASH")
+
 
     @_(r'\n')
     def ERROR(self, t):
@@ -315,7 +217,7 @@ class StringLexer(Lexer):
       
       # Reseteamos los parámetros
       self._string = ""
-      self._tooLong = False
+      self.contador = 0
       
       # Usammos el CoolLexer
       self.begin(CoolLexer)
@@ -327,16 +229,6 @@ class StringLexer(Lexer):
       # La coincidencia es parte del String
       self._string += t.value
       self.contador += 1
-      # Check lenght
-      if self.contador > 1024 and not self._tooLong:
-        '''
-        self._tooLong = True
-        '''
-        t.type = 'ERROR'
-        t.value = '"' + "String constant too long" + '"'
-        # Reseteamos los parámetros
-        self._string = ""
-        return t
     
 
 class CoolLexer(Lexer):
