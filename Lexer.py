@@ -89,7 +89,8 @@ class StringLexer(Lexer):
     '''
     # Parameters
     _string = ""
-    _tooLong = False
+    _msg = ""
+    _ERROR = False
     contador = 0
   
     tokens = {STR_CONST, ERROR}
@@ -97,8 +98,22 @@ class StringLexer(Lexer):
     @_(r'"')
     def STR_CONST(self, t):
 
+      # Check error
+      if self._ERROR:
+        # Formateamos el error
+        t.type = 'ERROR'
+        t.value = '"' + self._msg + '"'
+        # Reseteamos los parámetros
+        self._string = ""
+        self.contador = 0
+        self._ERROR = False
+        self._msg = ""
+        # Usamos el CoolLexer
+        self.begin(CoolLexer)
+        return t
+      
       # Check lenght
-      if self.contador > 1024:
+      elif self.contador > 1024:
         t.type = 'ERROR'
         t.value = '"' + "String constant too long" + '"'
         # Reseteamos los parámetros
@@ -107,15 +122,16 @@ class StringLexer(Lexer):
         # Usamos el CoolLexer
         self.begin(CoolLexer)
         return t
-      
-      # Retornamos el String
-      t.value = '"' + self._string + '"'
-      # Reseteamos los parámetros
-      self._string = ""
-      self.contador = 0
-      # Usamos al lexer de COOL
-      self.begin(CoolLexer)
-      return t
+
+      else:
+        # Retornamos el String
+        t.value = '"' + self._string + '"'
+        # Reseteamos los parámetros
+        self._string = ""
+        self.contador = 0
+        # Usamos al lexer de COOL
+        self.begin(CoolLexer)
+        return t
     
     @_(r'(\\\n|[^\n]|\\")$')
     def ERROREOF(self, t):
@@ -126,13 +142,15 @@ class StringLexer(Lexer):
       # Reseteamos parámetros
       self._string = ""
       self.contador = 0
+      self._ERROR = False
 
       # Usamos el CoolLexer
       self.begin(CoolLexer)
       return t
 
-    @_(r'(\\)?\x00(")?')
-    def ERRORNULL (self, t):
+    @_(r'(\\)\x00')
+    def ERRORNULLESCAPADO (self, t):
+      '''
       #print("ERRORNULL")
       t.value = '"' + "String contains escaped null character." + '"'
       t.type = 'ERROR'
@@ -140,10 +158,25 @@ class StringLexer(Lexer):
       # Reseteamos parámetros
       self._string = ""
       self.contador = 0
+      '''
+      if not self._ERROR:
+        self._msg = "String contains escaped null character."
+        self._ERROR = True
 
-      # Usamos el CoolLexer
-      self.begin(CoolLexer)
-      return t
+    @_(r'\x00')
+    def ERRORNULL (self, t):
+      '''
+      #print("ERRORNULL")
+      t.value = '"' + "String contains null character." + '"'
+      t.type = 'ERROR'
+
+      # Reseteamos parámetros
+      self._string = ""
+      self.contador = 0
+      '''
+      if not self._ERROR:
+        self._ERROR = True
+        self._msg = "String contains null character."
 
     @_(r'\\\t')
     def TABULACION(self, t):
@@ -214,15 +247,18 @@ class StringLexer(Lexer):
     def ERROR(self, t):
       #print("ERROR")
       t.value = '"' + "Unterminated string constant" + '"'
+      t.type = 'ERROR'
       
       # Reseteamos los parámetros
       self._string = ""
+      self._msg = ""
+      self._ERROR = False
       self.contador = 0
-      
-      # Usammos el CoolLexer
+
+      # Volvemos al CoolLexer
       self.begin(CoolLexer)
       return t
-
+      
     @_(r'[^"\\]')
     def ACUMULA(self, t):
       #print("ACUMULA")
@@ -338,10 +374,12 @@ class CoolLexer(Lexer):
         # Return error
         return t
 
-    @_(r'(\001|\002|\003|\004)')
+    @_(r'(\000|\001|\002|\003|\004)')
     def ERRORINVISIBLECHAR(self, t):
         # Change value
-        if t.value == '\001':
+        if t.value == '\000':
+          t.value = '"' + "\\000" + '"'
+        elif t.value == '\001':
           t.value = '"' + "\\001" + '"'
         elif t.value == '\002':
           t.value = '"' + "\\002" + '"'
@@ -361,7 +399,7 @@ class CoolLexer(Lexer):
         else:
           t.value = '"' + t.value + '"'
         return t
-
+  
     def error(self, t):
         # 
         self.index += 1
