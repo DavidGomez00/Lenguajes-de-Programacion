@@ -3,5 +3,6 @@
  OBJECTID character
  OBJECTID is
  OBJECTID here
- '=' 
+ DARROW
+ ASSIGN
  ')'

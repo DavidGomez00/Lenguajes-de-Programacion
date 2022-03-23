@@ -1,71 +1,77 @@
 #name "longcomment.cool"
  TYPEID Comment
  OBJECTID test
- ')' 
+ '*'
+ ')'
  TYPEID Comment
- ')' 
- ')' 
- ')' 
- ')' 
- ')' 
- ')' 
- ')' 
- ')' 
- ')' 
- ')' 
- OBJECTID single
- OBJECTID line
- OBJECTID comments
- TYPEID G
- TYPEID GH
- TYPEID TH
+ '*'
+ ')'
+ '*'
+ ')'
+ '*'
+ ')'
+ '*'
+ ')'
+ '*'
+ ')'
+ '*'
+ ')'
+ '*'
+ ')'
+ '*'
+ ')'
+ '*'
+ ')'
+ '*'
+ ')'
  TYPEID Comment
  OBJECTID test
- ')' 
+ '*'
+ ')'
  TYPEID Comment
- ')' 
- ')' 
- ')' 
- ')' 
- ')' 
- ')' 
- ')' 
- ')' 
- ')' 
- ')' 
- ')' 
+ '*'
+ ')'
+ '*'
+ ')'
+ '*'
+ ')'
+ '*'
+ ')'
+ '*'
+ ')'
+ '*'
+ ')'
+ '*'
+ ')'
+ '*'
+ ')'
+ '*'
+ ')'
+ '*'
+ ')'
+ '*'
+ '*'
+ '*'
+ '*'
+ '*'
+ '*'
+ '*'
+ '*'
+ '*'
+ '*'
+ '*'
+ '*'
+ '*'
+ '*'
+ ')'
  TYPEID Foo
  OBJECTID bar
- OBJECTID hello
- OBJECTID my
- OBJECTID name
- OBJECTID is
- OBJECTID george
- ';' 
- '@' 
- '@' 
- '@' 
- TYPEID ESFsej
- OBJECTID ok34
- ';' 
- OBJECTID u90
  TYPEID Moo
  OBJECTID bow
- OBJECTID heelo
- OBJECTID my
- OBJECTID nma
- OBJECTID ei
- OBJECTID sgeoegre
- ';' 
- INT_CONST 234
- INT_CONST 2
- '@' 
- OBJECTID f
  TYPEID JoJo
  TYPEID JojOj
  OBJECTID joJoj323
  OBJECTID dfdj
  OBJECTID fadsjfkldsafjklsd
- ';' 
- OBJECTID n
+ ';'
  OBJECTID dfdsajfk312

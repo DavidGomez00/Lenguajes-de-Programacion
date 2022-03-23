@@ -12,12 +12,43 @@ class Comentario(Lexer):
     # Tokens
     tokens = {}
 
+    cuenta = 1
+
+    # Comentario vacío
+    @_(r'\n?\(\*\*\)')
+    def SIMPLECOMMENT(self, t):
+        pass
+      
+    # Otro comentario
+    @_(r'[^\\]\(\*')
+    def COMENTARIO_ANIDADO(self, t):
+      self.cuenta += 1
+
+    # Otro comentario
+    @_(r'\n\(\*')
+    def COMENTARIO_ANIDADO2(self, t):
+      self.lineno += 1
+      self.cuenta += 1
+
     # Función para terminar el comentario
-    @_(r'\*\)')
+    @_(r'[^\\]\*\)')
     def VOLVER(self, t):
+      self.cuenta -= 1
+      if (self.cuenta == 0):
+        self.cuenta = 1
         # Retorna el flujo al CoolLexer
         self.begin(CoolLexer)
 
+    # Función para terminar el comentario
+    @_(r'\n\*\)')
+    def VOLVER2(self, t):
+      self.lineno += 1
+      self.cuenta -= 1
+      if (self.cuenta == 0):
+        self.cuenta = 1
+        # Retorna el flujo al CoolLexer
+        self.begin(CoolLexer)
+  
     # Función para ignorar
     @_(r'.')
     def PASAR(self, t):
@@ -26,9 +57,215 @@ class Comentario(Lexer):
     # Salto de línea
     @_(r'\n')
     def SALTO(self, t):
-        self.lineno += 1
+      self.lineno += 1
+
+
+class ComentarioSingular(Lexer):
+    ''' Clase para interpretar comentarios
+    '''
+
+    # Tokens
+    tokens = {}
     
-pass
+    # Función para ignorar
+    @_(r'.')
+    def PASAR(self, t):
+      pass
+
+    # Función para ignorar
+    @_(r'(.+|["]+)')
+    def PASAR(self, t):
+      pass
+
+    @_(r'\n')
+    def VOLVER(self, t):
+      # Retorna el flujo al CoolLexer
+      self.lineno += 1
+      self.begin(CoolLexer)
+
+
+class StringLexer(Lexer):
+    ''' Lexer para interpretar Strings.
+    '''
+    # Parameters
+    _string = ""
+    _msg = ""
+    _ERROR = False
+    contador = 0
+  
+    tokens = {STR_CONST, ERROR}
+    
+    @_(r'"')
+    def STR_CONST(self, t):
+
+      # Check error
+      if self._ERROR:
+        # Formateamos el error
+        t.type = 'ERROR'
+        t.value = '"' + self._msg + '"'
+        # Reseteamos los parámetros
+        self._string = ""
+        self.contador = 0
+        self._ERROR = False
+        self._msg = ""
+        # Usamos el CoolLexer
+        self.begin(CoolLexer)
+        return t
+      
+      # Check lenght
+      elif self.contador > 1024:
+        t.type = 'ERROR'
+        t.value = '"' + "String constant too long" + '"'
+        # Reseteamos los parámetros
+        self._string = ""
+        self.contador = 0
+        # Usamos el CoolLexer
+        self.begin(CoolLexer)
+        return t
+
+      else:
+        # Retornamos el String
+        t.value = '"' + self._string + '"'
+        # Reseteamos los parámetros
+        self._string = ""
+        self.contador = 0
+        # Usamos al lexer de COOL
+        self.begin(CoolLexer)
+        return t
+    
+    @_(r'(\\\n|[^\n]|\\")$')
+    def ERROREOF(self, t):
+      #print("ERROREOF")
+      t.value = '"' + "EOF in string constant" + '"'
+      t.type = 'ERROR'
+      
+      # Reseteamos parámetros
+      self._string = ""
+      self.contador = 0
+      self._ERROR = False
+
+      # Usamos el CoolLexer
+      self.begin(CoolLexer)
+      return t
+
+    @_(r'(\\)\x00')
+    def ERRORNULLESCAPADO (self, t):
+      '''
+      #print("ERRORNULL")
+      t.value = '"' + "String contains escaped null character." + '"'
+      t.type = 'ERROR'
+
+      # Reseteamos parámetros
+      self._string = ""
+      self.contador = 0
+      '''
+      if not self._ERROR:
+        self._msg = "String contains escaped null character."
+        self._ERROR = True
+
+    @_(r'\x00')
+    def ERRORNULL (self, t):
+      '''
+      #print("ERRORNULL")
+      t.value = '"' + "String contains null character." + '"'
+      t.type = 'ERROR'
+
+      # Reseteamos parámetros
+      self._string = ""
+      self.contador = 0
+      '''
+      if not self._ERROR:
+        self._ERROR = True
+        self._msg = "String contains null character."
+
+    @_(r'\\\t')
+    def TABULACION(self, t):
+      #print("TABULACION")
+      # Tabulación
+      self._string += "\\t"
+        
+    @_(r'\\\n')
+    def SALTO(self, t):
+      #print("SALTO")
+      # Salto de linea
+      self._string += "\\n"
+      self.lineno += 1
+      self.contador += 1
+
+      
+    @_(r'\\[\b]')
+    def BACKSPACE(self, t):
+      #print("BACKSPACE")
+      # Salto de b
+      self._string += "\\b"
+
+      
+    @_(r'\\[\f]')
+    def FORMFEED(self, t):
+      #print("FORMFEED")
+      # Salto de b
+      self._string += "\\f"
+
+    @_(r'\r')
+    def CARRIAGERETURN(self, t):
+      #print("CARRIAGERETURN")
+      # Salto de b
+      self._string += "\\015"
+
+
+    @_(r'\033')
+    def ESCAPEKEY(self, t):
+      #print("ESCAPEKEY")
+      # Salto de b
+      self._string += "\\033"
+
+    
+    @_(r'\\[nbft"]')
+    def BARRAENE(self, t):
+      #print("BARRAENE")
+      # Literal '\n'
+      self._string += "\\" + t.value[1:]
+      self.contador += 2
+
+
+    @_(r'\\\\')
+    def BARRABARRA(self, t):
+      #print("BARRABARRA")
+      # Dos \\ seguidas
+      self._string += "\\\\"
+      self.contador += 1
+
+    
+    @_(r'\\[^\\]')
+    def BACKLASH(self, t):
+      #print("BACKLASH")
+      self._string += t.value[1:]
+      self.contador += 2
+
+
+    @_(r'\n')
+    def ERROR(self, t):
+      #print("ERROR")
+      t.value = '"' + "Unterminated string constant" + '"'
+      t.type = 'ERROR'
+      
+      # Reseteamos los parámetros
+      self._string = ""
+      self._msg = ""
+      self._ERROR = False
+      self.contador = 0
+
+      # Volvemos al CoolLexer
+      self.begin(CoolLexer)
+      return t
+      
+    @_(r'[^"\\]')
+    def ACUMULA(self, t):
+      #print("ACUMULA")
+      # La coincidencia es parte del String
+      self._string += t.value
+      self.contador += 1
+    
 
 class CoolLexer(Lexer):
     ''' Lexer para interpretar el lenguaje COOL
@@ -38,7 +275,7 @@ class CoolLexer(Lexer):
     tokens = {OBJECTID, INT_CONST, BOOL_CONST, TYPEID,
               ELSE, IF, FI, THEN, NOT, IN, CASE, ESAC, CLASS,
               INHERITS, ISVOID, LET, LOOP, NEW, OF,
-              POOL, THEN, WHILE, STR_CONST, LE, DARROW, ASSIGN}
+              POOL, THEN, WHILE, STR_CONST, LE, DARROW, ASSIGN, ERROR}
 
     # Caracteres especiales
     ignore = '\t '
@@ -46,8 +283,7 @@ class CoolLexer(Lexer):
     # Definimos las regex para los distintos tokens
     ELSE = r'\b[eE][lL][sS][eE]\b'
     WHILE = r'\b[Ww][Hh][Ii][Ll][Ee]\b'
-    INT_CONST = r'\b[0-9]+\b'
-    STR_CONST = r'\b".*"\b'
+    INT_CONST = r'[0-9]+'
     THEN = r'\b[Tt][Hh][Ee][Nn]\b'
     POOL = r'\b[Pp][Oo][Oo][Ll]\b'    
     IF = r'\b[Ii][Ff]\b'
@@ -57,18 +293,19 @@ class CoolLexer(Lexer):
     CASE = r'\b[Cc][Aa][Ss][Ee]\b'
     ESAC = r'[Ee][Ss][Aa][Cc]'
     CLASS = r'\b[Cc][Ll][Aa][Ss][Ss]\b'
-    DARROW = r'\b->\b'
-    LE = r'\b<\b'
+    DARROW = r'=>'
+    LE = r'<='
     INHERITS = r'\b[iI][nN][hH][eE][rR][iI][tT][sS]\b'
     ISVOID = r'\b[iI][sS][vV][oO][iI][dD]\b'
     LET = r'\b[lL][eE][tT]\b'
     LOOP = r'\b[lL][oO][oO][pP]\b'
     NEW = r'\b[nN][eE][wW]\b'
     OF = r'\b[oO][fF]\b'
+    ASSIGN = r'<-'
 
     # Literales
     literals = {';', ':', '{', '}', '(', ')', '~',
-               '.', ',', '+', '/', '=', '@'}
+               '.', ',', '+', '/', '=', '@', '<', '-', '*'}
 
     # Definimos las funciones para interpretar los tokens con valor
 
@@ -77,10 +314,21 @@ class CoolLexer(Lexer):
     def SALTO(self, t):
         self.lineno += 1
 
-    # Assign
-    @_(r'\b<-\b')
-    def ASSIGN(self, t):
-        return t
+    # Comentario de una sola línea
+    @_(r'--')
+    def COMENTARIO2(self, t):
+        # Cambia el Lexer a Comentario
+        self.begin(ComentarioSingular)
+
+    # Comentario vacío
+    @_(r'\(\*\*\)')
+    def SIMPLECOMMENT(self, t):
+        pass
+
+    @_(r'"')
+    def STRING(self, t):
+      # Analizamos lo siguiente con el lexer de Strings.
+      self.begin(StringLexer)
 
     # Bool True
     @_(r'\b(t[Rr][Uu][Ee]|f[Aa][Ll][Ss][Ee])\b')
@@ -110,9 +358,51 @@ class CoolLexer(Lexer):
         self.begin(Comentario)
 
     # Error
-    def error(self, t):
-        self.index += 1
+    @_(r'[!#$%^&_>?`\[\]|]')
+    def ERRORINVALIDCHAR(self, t):
+        # Change value
+        t.value = '"' + t.value + '"'
+        t.type = "ERROR"
+        # Return error
+        return t
 
+    @_(r'\\')
+    def ERRORINVALIDCHABARRA(self, t):
+        # Change value
+        t.value = '"' + "\\\\" + '"'
+        t.type = "ERROR"
+        # Return error
+        return t
+
+    @_(r'(\000|\001|\002|\003|\004)')
+    def ERRORINVISIBLECHAR(self, t):
+        # Change value
+        if t.value == '\000':
+          t.value = '"' + "\\000" + '"'
+        elif t.value == '\001':
+          t.value = '"' + "\\001" + '"'
+        elif t.value == '\002':
+          t.value = '"' + "\\002" + '"'
+        elif t.value == '\003':
+          t.value = '"' + "\\003" + '"'
+        elif t.value == '\004':
+          t.value = '"' + "\\004" + '"'
+        
+        t.type = "ERROR"
+        # Return error
+        return t
+          
+    @_(r'(\*\)|_)')
+    def ERROR(self, t):
+        if (t.value == "*)"):
+          t.value = '"' + "Unmatched *)" + '"'
+        else:
+          t.value = '"' + t.value + '"'
+        return t
+  
+    def error(self, t):
+        # 
+        self.index += 1
     
 
     CARACTERES_CONTROL = [bytes.fromhex(i+hex(j)[-1]).decode('ascii')
@@ -131,7 +421,7 @@ class CoolLexer(Lexer):
             elif token.type == 'TYPEID':
                 result += f"{str(token.value)}"
             elif token.type in self.literals:
-                result = f'#{token.lineno} \'{token.type}\' '
+                result = f'#{token.lineno} \'{token.type}\''
             elif token.type == 'STR_CONST':
                 result += token.value
             elif token.type == 'INT_CONST':
