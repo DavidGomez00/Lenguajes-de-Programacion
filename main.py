@@ -10,7 +10,7 @@ DIRECTORIO = os.path.expanduser(".")
 sys.path.append(DIRECTORIO)
 
 from Lexer import *
-# from Parser import *
+#from Parser import *
 from Clases import *
 
 PRACTICA = "01" # Practica que hay que evaluar
@@ -24,6 +24,7 @@ TESTS = [fich for fich in FICHEROS
          re.search(r"^[a-zA-Z].*\.(cool|test|cl)$",fich)]
 TESTS.sort()
 TESTS = TESTS
+#TESTS = ['longstring_escapedbackslashes.cool']
 
 if True:
     for fich in TESTS:
@@ -33,7 +34,7 @@ if True:
         if os.path.isfile(os.path.join(DIR, fich)+'.nuestro'):
             os.remove(os.path.join(DIR, fich)+'.nuestro')
         if os.path.isfile(os.path.join(DIR, fich)+'.bien'):
-            os.remove(os.path.join(DIR, fich)+'.bien')
+            os.remove(os.path.join(DIR, fich)+'.bien')            
         texto = ''
         entrada = f.read()
         f.close()
@@ -42,15 +43,16 @@ if True:
             texto = f'#name "{fich}"\n' + texto
             resultado = g.read()
             g.close()
+            texto = re.sub(r'#\d+\b','',texto)
+            resultado = re.sub(r'#\d+\b','',resultado)
             if texto.strip().split() != resultado.strip().split():
                 print(f"Revisa el fichero {fich}")
+                
                 if DEBUG:
-                    texto = re.sub(r'#\d+\b','',texto)
-                    resultado = re.sub(r'#\d+\b','',resultado)
                     nuestro = [linea for linea in texto.split('\n') if linea]
                     bien = [linea for linea in resultado.split('\n') if linea]
                     linea = 0
-                    while nuestro[linea:linea+NUMLINEAS] == bien[linea:linea+NUMLINEAS]:
+                    while nuestro[linea:linea+NUMLINEAS] == bien[linea:linea+NUMLINEAS] and linea < len(bien):
                         linea += 1
                     print(colored('\n'.join(nuestro[linea:linea+NUMLINEAS]), 'white', 'on_red'))
                     print(colored('\n'.join(bien[linea:linea+NUMLINEAS]), 'blue', 'on_green'))
@@ -80,7 +82,7 @@ if True:
                         nuestro = [linea for linea in resultado.split('\n') if linea]
                         bien = [linea for linea in bien.split('\n') if linea]
                         linea = 0
-                        while nuestro[linea:linea+NUMLINEAS] == bien[linea:linea+NUMLINEAS]:
+                        while nuestro[linea:linea+NUMLINEAS] == bien[linea:linea+NUMLINEAS] and linea < len(bien):
                             linea += 1
                         print(colored('\n'.join(nuestro[linea:linea+NUMLINEAS]), 'white', 'on_red'))
                         print(colored('\n'.join(bien[linea:linea+NUMLINEAS]), 'blue', 'on_green'))
@@ -92,3 +94,4 @@ if True:
                         g.close()
             except Exception as e:
                 print(f"Lanza excepción en {fich} con el texto {e}")
+
