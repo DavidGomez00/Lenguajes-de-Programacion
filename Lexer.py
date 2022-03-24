@@ -205,7 +205,6 @@ class StringLexer(Lexer):
     @_(r'(\\\n|.|\\")$')
     def ERROREOF(self, t):
       #print("ERROREOF")
-      #print (t)
       # Error format
       t.value = '"' + "EOF in string constant" + '"'
       t.type = 'ERROR'
@@ -218,8 +217,24 @@ class StringLexer(Lexer):
 
       # Usamos el CoolLexer
       self.begin(CoolLexer)
-      return t    
+      return t
 
+    @_(r'\n$')
+    def ERRORRARO(self, t):
+      # Error format
+      t.value = '"' + "Unterminated string constant" + '"'
+      t.type = 'ERROR'
+      
+      # Reseteamos parámetros
+      self._string = ""
+      self.contador = 0
+      self._ERROR = False
+      self._msg = ""
+
+      # Usamos el CoolLexer
+      self.begin(CoolLexer)
+      return t
+      
     @_(r'(\\)\x00')
     def ERRORNULLESCAPADO (self, t):
       #print("ERRORNULL")
