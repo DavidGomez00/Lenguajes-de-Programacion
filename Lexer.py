@@ -119,6 +119,7 @@ class StringLexer(Lexer):
         # Reseteamos los parámetros
         self._string = ""
         self.contador = 0
+        self._msg = ""
         # Usamos el CoolLexer
         self.begin(CoolLexer)
         return t
@@ -129,6 +130,7 @@ class StringLexer(Lexer):
         # Reseteamos los parámetros
         self._string = ""
         self.contador = 0
+        self._msg = ""
         # Usamos al lexer de COOL
         self.begin(CoolLexer)
         return t
@@ -143,6 +145,7 @@ class StringLexer(Lexer):
       self._string = ""
       self.contador = 0
       self._ERROR = False
+      self._msg = ""
 
       # Usamos el CoolLexer
       self.begin(CoolLexer)
