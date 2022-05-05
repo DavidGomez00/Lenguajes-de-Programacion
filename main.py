@@ -23,6 +23,7 @@ TESTS = [fich for fich in FICHEROS
          if os.path.isfile(os.path.join(DIR, fich)) and
          re.search(r"^[a-zA-Z].*\.(cool|test|cl)$",fich)]
 TESTS.sort()
+
 #TESTS = TESTS
 TESTS = ['assigngetstype.test']
 
@@ -34,7 +35,7 @@ if True:
         if os.path.isfile(os.path.join(DIR, fich)+'.nuestro'):
             os.remove(os.path.join(DIR, fich)+'.nuestro')
         if os.path.isfile(os.path.join(DIR, fich)+'.bien'):
-            os.remove(os.path.join(DIR, fich)+'.bien')            
+            os.remove(os.path.join(DIR, fich)+'.bien')
         texto = ''
         entrada = f.read()
         f.close()
@@ -68,6 +69,7 @@ if True:
             parser.errores = []
             bien = ''.join([c for c in g.readlines() if c and '#' not in c])
             g.close()
+            # ERROR aqui
             j = parser.parse(lexer.tokenize(entrada))
             try:
                 if j and not parser.errores:
