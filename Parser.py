@@ -273,6 +273,7 @@ class CoolParser(Parser):
     def _expr(self, p):
       return Igual(operando="=")
 
+    ## Paréntesis
     @_('"(" _expr ")"')
     def _expr(self, p):
       return p[1]    
