@@ -24,7 +24,6 @@ class CoolParser(Parser):
       ('left', '.')
     )
 
-
     # Program
     @_('_class ";"')
     def _program(self, p):
