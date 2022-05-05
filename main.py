@@ -23,8 +23,8 @@ TESTS = [fich for fich in FICHEROS
          if os.path.isfile(os.path.join(DIR, fich)) and
          re.search(r"^[a-zA-Z].*\.(cool|test|cl)$",fich)]
 TESTS.sort()
-# TESTS = TESTS
-TESTS = ['arithprecedence.test']
+#TESTS = TESTS
+TESTS = ['assigngetstype.test']
 
 if True:
     for fich in TESTS:
@@ -70,7 +70,6 @@ if True:
             g.close()
             j = parser.parse(lexer.tokenize(entrada))
             try:
-                # que es "not parser.errores"
                 if j and not parser.errores:
                     resultado = '\n'.join([c for c in j.str(0).split('\n')
                                            if c and '#' not in c])
@@ -80,7 +79,7 @@ if True:
                 if resultado.lower().strip().split() != bien.lower().strip().split():
                     print(f"Revisa el fichero {fich}")
                     if DEBUG:
-                        '''
+                        
                         nuestro = [linea for linea in resultado.split('\n') if linea]
                         bien = [linea for linea in bien.split('\n') if linea]
                         linea = 0
@@ -88,7 +87,7 @@ if True:
                             linea += 1
                         print(colored('\n'.join(nuestro[linea:linea+NUMLINEAS]), 'white', 'on_red'))
                         print(colored('\n'.join(bien[linea:linea+NUMLINEAS]), 'blue', 'on_green'))
-                        '''
+                        
                         f = open(os.path.join(DIR, fich)+'.nuestro', 'w')
                         g = open(os.path.join(DIR, fich)+'.bien', 'w')
                         f.write(resultado.strip())
@@ -97,6 +96,8 @@ if True:
                         g.close()
             except Exception as e:
                 print(f"Lanza excepción en {fich} con el texto {e}")
+                
                 import traceback
                 traceback.print_exc()
+                
 
