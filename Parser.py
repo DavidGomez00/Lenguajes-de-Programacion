@@ -112,7 +112,7 @@ class CoolParser(Parser):
     ## Switch
     @_('CASE _expr OF _lista_case "+" ESAC')
     def _expr(self, p):
-      return Switch(
+      return Swicht(
         expr=p[1],
         casos=p[3])
   
