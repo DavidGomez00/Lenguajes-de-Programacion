@@ -1,3 +1,0 @@
-#name "stringwithescapes.cool"
- ERROR "String constant too long"
- INT_CONST 42

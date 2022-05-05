@@ -355,7 +355,7 @@ class CoolLexer(Lexer):
               POOL, THEN, WHILE, STR_CONST, LE, DARROW, ASSIGN, ERROR}
 
     # Caracteres especiales
-    ignore = '\t '
+    ignore = '\t'
 
     # Definimos las regex para los distintos tokens
     ELSE = r'\b[eE][lL][sS][eE]\b'
@@ -475,9 +475,11 @@ class CoolLexer(Lexer):
           t.value = '"' + "Unmatched *)" + '"'
         return t
   
+    
     def error(self, t):
-        # 
+        #print('Line %d: Bad character %r' % (self.lineno, t.value[0]))
         self.index += 1
+    
     
 
     CARACTERES_CONTROL = [bytes.fromhex(i+hex(j)[-1]).decode('ascii')
