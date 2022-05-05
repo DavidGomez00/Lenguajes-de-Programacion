@@ -18,12 +18,12 @@ class CoolParser(Parser):
       ('left', 'NOT'),
       ('left', 'LE', '<', '='),
       ('left', '+', '-'),
+      ('left', '*', '/'),
       ('left', 'ISVOID'),
       ('left', '~'),
       ('left', '@'),
       ('left', '.')
     )
-
 
     # Program
     @_('_class ";"')
@@ -52,7 +52,11 @@ class CoolParser(Parser):
     # Feature_list
     @_('_feature ";" _feature_list')
     def _feature_list(self, p):
-      return p._feature
+      return [p._feature] + p._feature_list
+
+    @_('_feature')
+    def _feature_list(self, p):
+      return [p._feature]
 
     @_('')
     def _feature_list(self, p):
@@ -90,6 +94,19 @@ class CoolParser(Parser):
       return Formal(nombre_variable=p[0], tipo=p[2])
     
     # Expresiones
+    ## Bloque
+    @_('"{" expresion_block "}"')
+    def _expr(self, p):
+      return Bloque(p.lineno, p.expresion_block)
+
+    @_('_expr ";"')
+    def expresion_block(self, p):
+      return [(p._expr)]
+    
+    @_('_expr ";" expresion_block')
+    def expresion_block(self, p):
+      return [(p._expr)] + p.expresion_block
+    
     ## Expresion list
     @_('_expr "," _expr_list')
     def _expr_list(self, p):
@@ -112,7 +129,7 @@ class CoolParser(Parser):
     ## Switch
     @_('CASE _expr OF _lista_case "+" ESAC')
     def _expr(self, p):
-      return Switch(
+      return Swicht(
         expr=p[1],
         casos=p[3])
   
@@ -241,38 +258,39 @@ class CoolParser(Parser):
     ### Suma
     @_('_expr "+" _expr')
     def _expr(self, p):
-      return Suma(operando="+")
+      return Suma(izquierda=p._expr0, derecha=p._expr1)
 
     ### Resta
     @_('_expr "-" _expr')
     def _expr(self, p):
-      return Resta(operando="-")
+      return Resta(izquierda=p._expr0, derecha=p._expr1)
 
     ### Multiplicación
     @_('_expr "*" _expr')
     def _expr(self, p):
-      return Multiplicacion(operando="*")
+      return Multiplicacion(izquierda=p._expr0, derecha=p._expr1)
       
     ### División
     @_('_expr "/" _expr')
     def _expr(self, p):
-      return Division(operando="/")
+      return Division(izquierda=p._expr0, derecha=p._expr1)
 
     ### Menor
     @_('_expr "<" _expr')
     def _expr(self, p):
-      return Menor(operando="<")
+      return Menor(izquierda=p._expr0, derecha=p._expr1)
       
     ### LeIgual
     @_('_expr LE _expr')
     def _expr(self, p):
-      return LeIgual(operando="<=")
+      return LeIgual(izquierda=p._expr0, derecha=p._expr1)
 
     ### Igual
     @_('_expr "=" _expr')
     def _expr(self, p):
-      return Igual(operando="=")
+      return Igual(izquierda=p._expr0, derecha=p._expr1)
 
+    ## Paréntesis
     @_('"(" _expr ")"')
     def _expr(self, p):
       return p[1]    
