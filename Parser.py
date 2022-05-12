@@ -62,6 +62,7 @@ class CoolParser(Parser):
     def _feature_list(self, p):
       return []
 
+      
     # Feature
     @_('OBJECTID "(" _formal_list ")" ":" TYPEID "{" _expr "}"')
     def _feature(self, p):
@@ -73,16 +74,16 @@ class CoolParser(Parser):
     
     @_('OBJECTID ":" TYPEID')
     def _feature(self, p):
-      return Atributo(nombre=p[0], tipo=p[2])
+      return Atributo(nombre=p[0], tipo=p[2], cuerpo=NoExpr())
 
     # Formal_list
     @_('_formal "," _formal_list')
     def _formal_list(self, p):
-      return p._formal
+      return [p[0]] + p[2]
 
     @_('_formal')
     def _formal_list(self, p):
-      return p._formal
+      return [p[0]]
 
     @_('')
     def _formal_list(self, p):
@@ -97,24 +98,25 @@ class CoolParser(Parser):
     ## Bloque
     @_('"{" expresion_block "}"')
     def _expr(self, p):
-      return Bloque(p.lineno, p.expresion_block)
-
+      return Bloque(expresiones=p[1])
+      #return Bloque(p.lineno, p.expresion_block)
+ 
     @_('_expr ";"')
     def expresion_block(self, p):
-      return [(p._expr)]
+      return [p[0]]
     
     @_('_expr ";" expresion_block')
     def expresion_block(self, p):
-      return [(p._expr)] + p.expresion_block
+      return [p[0]] + p[2]
     
     ## Expresion list
     @_('_expr "," _expr_list')
     def _expr_list(self, p):
-      return p._expr
+      return [p[0]] + p[2]
 
     @_('_expr')
     def _expr_list(self, p):
-      return p._expr
+      return [p[0]]
 
     @_('')
     def _expr_list(self, p):
@@ -151,9 +153,9 @@ class CoolParser(Parser):
       return []
 
     ## Asignacion
-    @_('_expr ASSIGN _expr')
+    @_('OBJECTID ASSIGN _expr')
     def _expr(self, p):
-      return Asignacion(nombre=p[0], cuerpo=p[1])
+      return Asignacion(nombre=p[0], cuerpo=p[2])
 
     ## Llamada a método estático
     @_('_expr "@" TYPEID "." OBJECTID "(" _expr_list ")"')
@@ -171,6 +173,13 @@ class CoolParser(Parser):
           nombre_metodo=p[2],
           argumentos=p[4])
 
+    @_('OBJECTID "(" _expr_list ")"')
+    def _expr(self, p):
+        return LlamadaMetodo(
+          cuerpo=Objeto(nombre="self"),
+          nombre_metodo=p[0],
+          argumentos=p[2])
+
     ## Condicional
     @_('IF _expr THEN _expr ELSE _expr FI')
     def _expr(self, p):
@@ -184,35 +193,35 @@ class CoolParser(Parser):
     ## Let
     @_('LET OBJECTID ":" TYPEID ASSIGN _expr IN _expr')
     def _expr(self, p):
-      return Let(nombre=p[1], tipo=p[3], inicializacion=[(p[1], p[3], p[5])], cuerpo=p[7])
+      return Let(nombre=p[1], tipo=p[3], inicializacion=p[5], cuerpo=p[7])
     
     @_('LET OBJECTID ":" TYPEID IN _expr')
     def _expr(self, p):
-      return Let(nombre=p[1], tipo=p[3], inicializacion=[(p[1], p[3], NoExpr(nombre=p[1]))], cuerpo=p[5])
+      return Let(nombre=p[1], tipo=p[3], inicializacion=NoExpr(), cuerpo=p[5])
 
     @_('LET OBJECTID ":" TYPEID ASSIGN _expr "," _listalet')
     def _expr(self, p):
-      return Let(nombre=p[1], tipo=p[3], inicializacion=[(p[1], p[3], p[5])], cuerpo=p[7])
+      return Let(nombre=p[1], tipo=p[3], inicializacion=p[5], cuerpo=p[7])
 
     @_('LET OBJECTID ":" TYPEID "," _listalet')
     def _expr(self, p):
-      return Let(nombre=p[1], tipo=p[3], inicializacion=[(p[1], p[3], NoExpr(nombre=p[1]))], cuerpo=p[5])
+      return Let(nombre=p[1], tipo=p[3], inicializacion=NoExpr(), cuerpo=p[5])
 
     @_('OBJECTID ":" TYPEID ASSIGN _expr "," _listalet')
     def _listalet(self, p):
-      return Let(nombre=p[0], tipo=p[2], inicializacion=[(p[0], p[2], p[4])], cuerpo=p[6])
+      return Let(nombre=p[0], tipo=p[2], inicializacion=p[4], cuerpo=p[6])
 
     @_('OBJECTID ":" TYPEID "," _listalet')
     def _listalet(self, p):
-      return Let(nombre=p[0], tipo=p[2], inicializacion=[(p[0], p[2], NoExpr(nombre=p[0]))], cuerpo=p[6])
+      return Let(nombre=p[0], tipo=p[2], inicializacion=NoExpr(), cuerpo=p[4])
 
     @_('OBJECTID ":" TYPEID ASSIGN _expr IN _expr')
     def _listalet(self, p):
-      return Let(nombre=p[0], tipo=p[2], inicializacion=[(p[0], p[2], p[4])], cuerpo=p[6])
+      return Let(nombre=p[0], tipo=p[2], inicializacion=p[4], cuerpo=p[6])
 
     @_('OBJECTID ":" TYPEID IN _expr')
     def _listalet(self, p):
-      return Let(nombre=p[0], tipo=p[2], inicializacion=[(p[0], p[2], NoExpr(nombre=p[0]))], cuerpo=p[6])
+      return Let(nombre=p[0], tipo=p[2], inicializacion=NoExpr(), cuerpo=p[4])
       
     ## Bloque
     @_('"{" _expr ";" _expr ";" "}"')
@@ -259,6 +268,8 @@ class CoolParser(Parser):
     @_('_expr "+" _expr')
     def _expr(self, p):
       return Suma(izquierda=p._expr0, derecha=p._expr1)
+    
+
 
     ### Resta
     @_('_expr "-" _expr')
@@ -296,3 +307,16 @@ class CoolParser(Parser):
       return p[1]    
 
     
+    ## Errores
+    def error(self, p):
+      print(p, Lexer.literals)
+      mensaje = ''
+      if (not p):
+        return
+      elif (p.type == 'TYPEID'):
+        mensaje = f'"{self.nombre_fichero}", line {p.lineno}: syntax error at or near {p.type} = {p.value}'
+      elif (p.value == '+'):
+        mensaje = f'"{self.nombre_fichero}", line {p.lineno}: syntax error at or near {p.type} = {p.value}'
+
+      self.errores.append(mensaje)
+      
