@@ -99,15 +99,18 @@ class CoolParser(Parser):
     @_('"{" expresion_block "}"')
     def _expr(self, p):
       return Bloque(expresiones=p[1])
-      #return Bloque(p.lineno, p.expresion_block)
  
     @_('_expr ";"')
     def expresion_block(self, p):
       return [p[0]]
     
-    @_('_expr ";" expresion_block')
+    @_('error ";"')
     def expresion_block(self, p):
-      return [p[0]] + p[2]
+      return []
+    
+    @_('expresion_block _expr ";" ')
+    def expresion_block(self, p):
+      return p[0] + [p[1]]
     
     ## Expresion list
     @_('_expr "," _expr_list')
@@ -309,14 +312,14 @@ class CoolParser(Parser):
     
     ## Errores
     def error(self, p):
-      print(p, Lexer.literals)
+      print(p)
       mensaje = ''
       if (not p):
         return
       elif (p.type == 'TYPEID'):
         mensaje = f'"{self.nombre_fichero}", line {p.lineno}: syntax error at or near {p.type} = {p.value}'
       elif (p.value == '+'):
-        mensaje = f'"{self.nombre_fichero}", line {p.lineno}: syntax error at or near {p.type} = {p.value}'
+        mensaje = f'"{self.nombre_fichero}", line {p.lineno}: syntax error at or near \'{p.value}\''
 
       self.errores.append(mensaje)
       
