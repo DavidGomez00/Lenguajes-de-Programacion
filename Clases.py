@@ -3,6 +3,32 @@ from dataclasses import dataclass, field
 from typing import List
 
 
+class Ambito():
+  '''Clase auxiliar para determinar 
+  el tipo de elemento.
+  '''
+  caracteristicas = []
+
+  def add(self, elemento):
+    ''' Anhade un elemento al ambito. '''
+    self.caracteristicas.append(elemento)
+    #print(f'{elemento}')
+  
+  def busca(self, elemento):
+    ''' Busca el elemento en este ambito, sino lo
+    busca en el del padre.
+    '''
+    for caracteristica in self.caracteristicas:
+      if elemento == caracteristica.nombre:
+        return caracteristica.cuerpo.tipo
+    
+    if self.padre != None:
+      return self.padre.busca(elemento)
+      
+    else:
+      return None
+
+
 @dataclass
 class Nodo:
     linea: int = 0
@@ -39,7 +65,21 @@ class Asignacion(Expresion):
         resultado += self.cuerpo.str(n+2)
         resultado += f'{(n)*" "}: {self.cast}\n'
         return resultado
+    
 
+    def tipo(self, ambito):
+      # El nombre es un OBJECTID, por lo que buscamos directamente
+      # el string del OBJECTID
+      tipoNombre = ambito.busca(self.nombre)
+      # El tipo de la expresion
+      tipoCuerpo = self.cuerpo.tipo(ambito)
+      # Comprobamos que son del mismo tipo
+      if (tipoNombre == tipoCuerpo):
+        self.cast = self.nombre.cast
+      else:
+        # Lo devolvemos como un object para evitar errores
+        self.cast = 'Object'
+      
 
 @dataclass
 class LlamadaMetodoEstatico(Expresion):
@@ -199,6 +239,14 @@ class Suma(OperacionBinaria):
         resultado += f'{(n)*" "}: {self.cast}\n'
         return resultado
 
+    def tipo(self):
+      dcho = self.derecho.tipo()
+      izdo = self.izquierdo.tipo()
+      
+      # Comprobar que las clases se pueden sumar
+      if (izdo == dcho):
+        self.cast = izdo
+
 
 @dataclass
 class Resta(OperacionBinaria):
@@ -239,6 +287,13 @@ class Division(OperacionBinaria):
         resultado += f'{(n)*" "}: {self.cast}\n'
         return resultado
 
+    def tipo(self):
+      izda = self.izquierdo.tipo()
+      dcho = self.derecho.tipo()
+      if (izda == dcho):
+        # Comprobar que la clase se puede dividir y lanzar excepciones
+        self.cast = izda
+
 
 @dataclass
 class Menor(OperacionBinaria):
@@ -252,6 +307,16 @@ class Menor(OperacionBinaria):
         resultado += f'{(n)*" "}: {self.cast}\n'
         return resultado
 
+    
+    def tipo(self, ambito):
+      self.Izquierda.tipo(ambito)
+      self.Derecha.tipo(ambito)
+      if (self.Izquierda.cast == self.Derecha.cast):
+        self.cast = 'Bool'
+      else:
+        self.cast = 'Object'
+    
+
 @dataclass
 class LeIgual(OperacionBinaria):
     operando: str = '<='
@@ -263,6 +328,14 @@ class LeIgual(OperacionBinaria):
         resultado += self.derecha.str(n+2)
         resultado += f'{(n)*" "}: {self.cast}\n'
         return resultado
+
+    def tipo(self):
+      self.Izquierda.tipo()
+      self.Derecha.tipo()
+      if (self.Izquierda.cast == self.Derecha.cast):
+        self.cast = 'Bool'
+      else:
+        self.cast = 'Object'
 
 
 @dataclass
@@ -276,6 +349,14 @@ class Igual(OperacionBinaria):
         resultado += self.derecha.str(n+2)
         resultado += f'{(n)*" "}: {self.cast}\n'
         return resultado
+
+    def tipo(self, ambito):
+      self.Izquierda.Tipo(ambito) # se establece el cast
+      self.Derecha.Tipo(ambito)
+      if (self.Izquierda.cast == self.Derecha.cast):
+        self.cast = 'Bool'
+      else:
+        self.cast = 'Object'
 
 
 
@@ -331,6 +412,9 @@ class Objeto(Expresion):
         resultado += f'{(n)*" "}: {self.cast}\n'
         return resultado
 
+    def tipo(self):
+        self.cast = 'Object'
+
 
 @dataclass
 class NoExpr(Expresion):
@@ -354,6 +438,9 @@ class Entero(Expresion):
         resultado += f'{(n)*" "}: {self.cast}\n'
         return resultado
 
+    def tipo(self):
+      self.cast = 'Int'
+
 
 @dataclass
 class String(Expresion):
@@ -366,8 +453,9 @@ class String(Expresion):
         resultado += f'{(n)*" "}: {self.cast}\n'
         return resultado
 
-
-
+    def Tipo(self, n):
+      self.cast = 'String'
+  
 @dataclass
 class Booleano(Expresion):
     valor: bool = False
@@ -379,12 +467,29 @@ class Booleano(Expresion):
         resultado += f'{(n)*" "}: {self.cast}\n'
         return resultado
 
+    def tipo():
+      self.cast = 'Bool'
+
 @dataclass
 class IterableNodo(Nodo):
     secuencia: List = field(default_factory=List)
 
 
 class Programa(IterableNodo):
+    
+    def Tipo(self):
+      # Creamos el ambito
+      ambito = Ambito()
+
+      # Construimos el arbol de herencias
+      for clase in self.secuencia:
+        # Utilizar un arbol para registrar la herencia
+        ambito.ponerHerencia(clase.nombre, clase.padre)
+
+      # 
+      for clase in self.secuencia:
+        clase.Tipo(ambito)
+  
     def str(self, n):
         resultado = super().str(n)
         resultado += f'{" "*n}_program\n'
@@ -404,6 +509,20 @@ class Clase(Nodo):
     padre: str = '_no_set'
     nombre_fichero: str = '_no_set'
     caracteristicas: List[Caracteristica] = field(default_factory=list)
+    ambito: Ambito = None
+
+    def Tipo(self, ambito):
+      
+      for c in self.caracteristicas:
+        if (isinstance(c, Atributo)):
+          # anhadir al ambito el atributo - nombre y tipo
+          diccionario[(self.nombre, c.nombre)] = c.tipo  # Atencion en la busqueda, mirar padres
+        elif(isinstance(c, Metodo)):
+          #anhadir el metodo
+
+      # Comprobacion de tipos
+      for c in self.caracteristicas:
+        c.Tipo(deepcopy(ambito))
 
     def str(self, n):
         resultado = super().str(n)
@@ -441,3 +560,7 @@ class Atributo(Caracteristica):
         resultado += f'{(n+2)*" "}{self.tipo}\n'
         resultado += self.cuerpo.str(n+2)
         return resultado
+
+    def tipo(self, ambito):
+        # Comparamos cuerpo con tipo
+      pass
