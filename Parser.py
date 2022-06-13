@@ -1,5 +1,4 @@
 # coding: utf-8
-
 from Lexer import CoolLexer
 from sly import Parser
 import sys
