@@ -13,7 +13,7 @@ from Lexer import *
 from Parser import *
 from Clases import *
 
-PRACTICA = "02" # Practica que hay que evaluar
+PRACTICA = "03" # Practica que hay que evaluar
 DEBUG = True   # Decir si se lanzan mensajes de debug
 NUMLINEAS = 3   # Numero de lineas que se muestran antes y después de la no coincidencia
 sys.path.append(DIRECTORIO)
@@ -23,9 +23,8 @@ TESTS = [fich for fich in FICHEROS
          if os.path.isfile(os.path.join(DIR, fich)) and
          re.search(r"^[a-zA-Z].*\.(cool|test|cl)$",fich)]
 TESTS.sort()
-
-#TESTS = TESTS
-TESTS = ['assigngetstype.test']
+TESTS = TESTS
+#TESTS = ['attrbadinit.test']
 
 if True:
     for fich in TESTS:
@@ -69,19 +68,21 @@ if True:
             parser.errores = []
             bien = ''.join([c for c in g.readlines() if c and '#' not in c])
             g.close()
-            # ERROR aqui
             j = parser.parse(lexer.tokenize(entrada))
             try:
                 if j and not parser.errores:
+                    # Llevar desde aqui la gestion de errores
+                    # Modificar el resultado
+                    j.Tipo()  # Ambito y herencias
                     resultado = '\n'.join([c for c in j.str(0).split('\n')
                                            if c and '#' not in c])
                 else:
                     resultado = '\n'.join(parser.errores)
                     resultado += '\n' + "Compilation halted due to lex and parse errors"
+                
                 if resultado.lower().strip().split() != bien.lower().strip().split():
                     print(f"Revisa el fichero {fich}")
                     if DEBUG:
-                        
                         nuestro = [linea for linea in resultado.split('\n') if linea]
                         bien = [linea for linea in bien.split('\n') if linea]
                         linea = 0
@@ -89,17 +90,17 @@ if True:
                             linea += 1
                         print(colored('\n'.join(nuestro[linea:linea+NUMLINEAS]), 'white', 'on_red'))
                         print(colored('\n'.join(bien[linea:linea+NUMLINEAS]), 'blue', 'on_green'))
-                        
                         f = open(os.path.join(DIR, fich)+'.nuestro', 'w')
                         g = open(os.path.join(DIR, fich)+'.bien', 'w')
                         f.write(resultado.strip())
-                        g.write(bien.strip())
+                        g.write('\n'.join(bien).strip())
                         f.close()
                         g.close()
             except Exception as e:
+              # Escribir y comparar excepciones
+              '''
                 print(f"Lanza excepción en {fich} con el texto {e}")
-                
                 import traceback
                 traceback.print_exc()
-                
+              '''
 
