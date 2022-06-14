@@ -1,0 +1,37 @@
+_program
+  _class
+    A
+    Object
+    "overridingmethod.test"
+    (
+    _method
+      foo
+      Int
+      _int
+        6
+      : Int
+    )
+  _class
+    B
+    A
+    "overridingmethod.test"
+    (
+    _method
+      foo
+      Int
+      _int
+        7
+      : Int
+    )
+  _class
+    Main
+    Object
+    "overridingmethod.test"
+    (
+    _method
+      main
+      Int
+      _int
+        6
+      : Int
+    )

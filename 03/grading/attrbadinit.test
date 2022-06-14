@@ -7,4 +7,3 @@ class Cow {
 class Chicken {
       sound : Object <- moo;
 };
-

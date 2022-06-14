@@ -9,7 +9,7 @@ _program
       Int
       _int
         0
-      : Int
+      : _no_type
     )
   _class
     A
@@ -33,6 +33,6 @@ _program
         : _no_type
         _string
           "test"
-        : String
-      : Bool
+        : _no_type
+      : _no_type
     )

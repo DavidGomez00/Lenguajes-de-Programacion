@@ -9,7 +9,7 @@ _program
       Object
       _int
         0
-      : Int
+      : _no_type
     )
   _class
     Animal
@@ -27,7 +27,7 @@ _program
       String
       _string
         "moo"
-      : String
+      : _no_type
     )
   _class
     Blerg

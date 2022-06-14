@@ -1,0 +1,38 @@
+_program
+  _class
+    Main
+    Object
+    "letbadinit.test"
+    (
+    _method
+      main
+      Object
+      _let
+        x
+        B
+        _new
+          A
+        : _no_type
+        _int
+          10
+        : _no_type
+      : _no_type
+    )
+  _class
+    A
+    Object
+    "letbadinit.test"
+    (
+    )
+  _class
+    B
+    A
+    "letbadinit.test"
+    (
+    )
+  _class
+    C
+    B
+    "letbadinit.test"
+    (
+    )

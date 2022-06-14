@@ -48,5 +48,5 @@ _program
         _object
           b
         : _no_type
-      : Bool
+      : _no_type
     )
