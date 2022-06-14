@@ -1,4 +1,5 @@
 # coding: utf-8
+
 from Lexer import CoolLexer
 from sly import Parser
 import sys
@@ -90,11 +91,11 @@ class CoolParser(Parser):
     
     @_('OBJECTID ":" TYPEID ASSIGN _expr')
     def _feature(self, p):
-      return Atributo(nombre=p[0], tipo=p[2], cuerpo=p[4])
+      return Atributo(nombre=p[0], tipo=p[2], cuerpo=p[4], linea=p.lineno)
     
     @_('OBJECTID ":" TYPEID')
     def _feature(self, p):
-      return Atributo(nombre=p[0], tipo=p[2], cuerpo=NoExpr())
+      return Atributo(nombre=p[0], tipo=p[2], cuerpo=NoExpr(), linea=p.lineno)
 
     @_('OBJECTID ":" error')
     def _feature(self, p):
@@ -190,7 +191,7 @@ class CoolParser(Parser):
     ## Asignacion
     @_('OBJECTID ASSIGN _expr')
     def _expr(self, p):
-      return Asignacion(nombre=p[0], cuerpo=p[2])
+      return Asignacion(nombre=p[0], cuerpo=p[2], linea=p.lineno)
 
     ## Llamada a método estático
     @_('_expr "@" TYPEID "." OBJECTID "(" _expr_list ")"')
@@ -309,7 +310,7 @@ class CoolParser(Parser):
     ## Objeto
     @_('OBJECTID')
     def _expr(self, p):
-      return Objeto(nombre=p[0])
+      return Objeto(nombre=p[0], linea=p.lineno)
       
     ## Entero
     @_('INT_CONST')
@@ -330,37 +331,37 @@ class CoolParser(Parser):
     ### Suma
     @_('_expr "+" _expr')
     def _expr(self, p):
-      return Suma(izquierda=p._expr0, derecha=p._expr1)   
+      return Suma(izquierda=p._expr0, derecha=p._expr1, linea=p.lineno)   
 
     ### Resta
     @_('_expr "-" _expr')
     def _expr(self, p):
-      return Resta(izquierda=p._expr0, derecha=p._expr1)
+      return Resta(izquierda=p._expr0, derecha=p._expr1, linea=p.lineno)
 
     ### Multiplicación
     @_('_expr "*" _expr')
     def _expr(self, p):
-      return Multiplicacion(izquierda=p._expr0, derecha=p._expr1)
+      return Multiplicacion(izquierda=p._expr0, derecha=p._expr1, linea=p.lineno)
       
     ### División
     @_('_expr "/" _expr')
     def _expr(self, p):
-      return Division(izquierda=p._expr0, derecha=p._expr1)
+      return Division(izquierda=p._expr0, derecha=p._expr1, linea=p.lineno)
 
     ### Menor
     @_('_expr "<" _expr')
     def _expr(self, p):
-      return Menor(izquierda=p._expr0, derecha=p._expr1)
+      return Menor(izquierda=p._expr0, derecha=p._expr1, linea=p.lineno)
       
     ### LeIgual
     @_('_expr LE _expr')
     def _expr(self, p):
-      return LeIgual(izquierda=p._expr0, derecha=p._expr1)
+      return LeIgual(izquierda=p._expr0, derecha=p._expr1, linea=p.lineno)
 
     ### Igual
     @_('_expr "=" _expr')
     def _expr(self, p):
-      return Igual(izquierda=p._expr0, derecha=p._expr1)
+      return Igual(izquierda=p._expr0, derecha=p._expr1, linea=p.lineno)
 
     ## Paréntesis
     @_('"(" _expr ")"')

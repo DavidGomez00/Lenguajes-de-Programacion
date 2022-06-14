@@ -4,32 +4,68 @@ from typing import List
 from anytree import Node, RenderTree, PreOrderIter
 from collections import defaultdict
 
+class CustomizedException(Exception):
+  pass
+  
 class Ambito():
   '''Clase auxiliar para determinar 
   el tipo de elemento.
   '''
 
-  diccionario_declaraciones = defaultdict('_no_set')
+  # Diccionario que guarda donde se han declarado los metodos y atributos y su tipo
+  dict = defaultdict(str)
+  # Referencia a la clase que estamos analizando
+  clase_actual = None
 
   def __init__(self):
     ''' Instancia un ámbito.'''
     # Registro de las clases y herencias
     self.arbol_clases = Node("ROOT")
 
-  def anhadeClase(self, clase, clase_padre=None):
+  def anhadeClase(self, clase):
     ''' Anhade un elemento al ambito. '''
-    # Si no se define el padre, depende de ROOT
-    if clase_padre is None:
-        Node(clase.nombre, parent=self.arbol_clases)
+    # Buscamos el nodo que referencia a la clase padre
+    nodo_padre = [node 
+      for node in PreOrderIter(self.arbol_clases)
+      if node.name == clase.padre]
+    
+    # Si no se encuentra el padre, depende de ROOT
+    if (len(nodo_padre) == 0):
+      # Creamos la relación de herencia
+      Node(clase.nombre, parent=self.arbol_clases)
     else:
-        # Buscamos el nodo que referencia a la clase padre
-        nodo_padre = [node 
-            for node in PreOrderIter(self.arbol_clases)
-            if node.name == clase_padre.nombre]
-        # Creamos la relación de herencia
-        Node(clase.nombre, parent=nodo_padre)
+      # Creamos la relación de herencia
+      Node(clase.nombre, parent=nodo_padre[0])
 
+    # Anhadimos la clase al ambito
+    self.dict[('ROOT', clase.nombre)] = clase.nombre
 
+  def busca(self, nombre:str, clase:str=None):
+    ''' Encuentra el tipo de nombre. Si no esta asignado retorna _no_encontrado.
+    '''
+    # En caso de no especificar la clase desde la que buscar, usamos la clase actual
+    if (clase is None): 
+      clase = self.clase_actual.nombre
+    
+    # Nodo correspondiente a la clase desde la que buscamos
+    nodo_actual = [nodo 
+                  for nodo in PreOrderIter(self.arbol_clases) # Todos los nodos del arbol
+                  if nodo.name == clase][0]                   # Solo aquel cuyo nombre coincide
+    
+    # Consigo todas las tuplas de (clase, atributo) para la clase y sus padres
+    tuplas = []
+    while (nodo_actual is not None):
+      tuplas.append((nodo_actual.name, nombre)) # Anhado la tupla (clase, caracteristica)
+      nodo_actual = nodo_actual.parent          # Buscamos en el padre
+    
+    # Compruebo en todas las entradas para las tuplas generadas
+    for tupla in tuplas:
+      # Si la entrada es distinta de la default ('') retorna lo que ha encontrado
+      if self.dict[tupla] != '':
+        return self.dict[tupla]
+    # Si no encontramos nada, retorna '_no_encontrado'
+    return '_no_encontrado'
+      
 @dataclass
 class Nodo:
     linea: int = 0
@@ -49,6 +85,18 @@ class Formal(Nodo):
         resultado += f'{(n+2)*" "}{self.tipo}\n'
         return resultado
 
+    def Tipo(self, ambito):
+      # Hemos de comprobar que los tipos de los objetos de clases no basicas estén declaradas
+      if self.tipo not in ['Int', 'Bool', 'String']:
+        # Comprobamos que tenemos la clase en el arbol de clases
+        clase = [clase 
+                for clase in PreOrderIter(ambito.arbol_clases)
+                if clase.name == self.tipo]
+        # Si la longitud de la lista es 0, es que no ha encontrado la clase
+        if len(clase) == 0:
+          # Lanzar Error
+          pass
+      
 
 class Expresion(Nodo):
     cast: str = '_no_type'
@@ -66,11 +114,18 @@ class Asignacion(Expresion):
         resultado += self.cuerpo.str(n+2)
         resultado += f'{(n)*" "}: {self.cast}\n'
         return resultado
-    
 
-    def tipo(self, ambito):
-      # Donde buscar la declaración del nombre
-      pass
+    def Tipo(self, ambito):
+      # Comprobamos el cuerpo
+      self.cuerpo.Tipo(ambito)
+      
+      # Comprobamos que son el mismo tipo
+      tipo_nombre = ambito.busca(self.nombre)
+      if (self.cuerpo.cast != tipo_nombre):
+        raise CustomizedException(f"{self.linea}: Type {self.cuerpo.cast} of assigned expression does not conform to declared type {tipo_nombre} of identifier {self.nombre}.")
+      # Cambiamos el cast de la asignación
+      self.cast = tipo_nombre
+      
       
 
 @dataclass
@@ -92,6 +147,10 @@ class LlamadaMetodoEstatico(Expresion):
         resultado += f'{(n)*" "}: _no_type\n'
         return resultado
 
+    def Tipo(self, ambito):
+      # Falta por implementar
+      pass
+
 
 @dataclass
 class LlamadaMetodo(Expresion):
@@ -110,6 +169,12 @@ class LlamadaMetodo(Expresion):
         resultado += f'{(n)*" "}: {self.cast}\n'
         return resultado
 
+    def Tipo(self, ambito):
+      # Comprobamos el cuerpo
+      self.cuerpo.Tipo(ambito)
+
+      # Buscamos el tipo del método
+      tipo_metodo = ambito.busca(self.nombre_metodo, self.cuerpo.cast)
 
 @dataclass
 class Condicional(Expresion):
@@ -126,6 +191,10 @@ class Condicional(Expresion):
         resultado += f'{(n)*" "}: {self.cast}\n'
         return resultado
 
+    def Tipo(self, ambito):
+      # Falta implementar
+      pass
+
 
 @dataclass
 class Bucle(Expresion):
@@ -139,6 +208,10 @@ class Bucle(Expresion):
         resultado += self.cuerpo.str(n+2)
         resultado += f'{(n)*" "}: {self.cast}\n'
         return resultado
+
+    def Tipo(self, ambito):
+      # Falta por implementar
+      pass
 
 
 @dataclass
@@ -158,6 +231,10 @@ class Let(Expresion):
         resultado += f'{(n)*" "}: {self.cast}\n'
         return resultado
 
+    def Tipo(self, ambito):
+      # Falta por implementar
+      pass
+
 
 @dataclass
 class Bloque(Expresion):
@@ -171,6 +248,12 @@ class Bloque(Expresion):
         resultado += '\n'
         return resultado
 
+    def Tipo(self, ambito):
+      # Comprobamos las expresiones
+      for expr in self.expresiones:
+        expr.Tipo(ambito)
+      # Establecemos el cast del bloque como el resultado de la ultima expresion
+      self.cast = self.expresiones[-1].cast
 
 @dataclass
 class RamaCase(Nodo):
@@ -187,6 +270,9 @@ class RamaCase(Nodo):
         resultado += f'{(n)*" "}: {self.cast}\n'
         return resultado
 
+    def Tipo(self, ambito):
+      # Falta implementar
+      pass
 
 @dataclass
 class Swicht(Nodo):
@@ -201,9 +287,14 @@ class Swicht(Nodo):
         resultado += f'{(n)*" "}: {self.cast}\n'
         return resultado
 
+    def Tipo(self, ambito):
+      # Falta implementar
+      pass
+
 @dataclass
-class Nueva(Nodo):
+class Nueva(Expresion):
     tipo: str = '_no_set'
+  
     def str(self, n):
         resultado = super().str(n)
         resultado += f'{(n)*" "}_new\n'
@@ -211,7 +302,15 @@ class Nueva(Nodo):
         resultado += f'{(n)*" "}: {self.cast}\n'
         return resultado
 
-
+    def Tipo(self, ambito):
+      # Comprobamos que tenemos el tipo en el ambito
+      clase = [clase for clase in PreOrderIter(ambito.arbol_clases)
+              if clase.name == self.tipo][0]
+      if not clase:
+        # Lanzar Error
+        pass
+      else:
+        self.cast = clase.name
 
 @dataclass
 class OperacionBinaria(Expresion):
@@ -231,13 +330,18 @@ class Suma(OperacionBinaria):
         resultado += f'{(n)*" "}: {self.cast}\n'
         return resultado
 
-    def tipo(self):
-      dcho = self.derecho.tipo()
-      izdo = self.izquierdo.tipo()
+    def Tipo(self, ambito):
+      # Comprobamos que los dos lados estén bien
+      self.izquierda.Tipo(ambito)
+      self.derecha.Tipo(ambito)
       
-      # Comprobar que las clases se pueden sumar
-      if (izdo == dcho):
-        self.cast = izdo
+      # Comprobamos solo integers
+      if self.izquierda.cast != 'Int' or self.derecha.cast != 'Int':
+        # Lanzar Error
+        raise CustomizedException(f"{self.linea}: non-Int arguments: {self.izquierda.cast} + {self.derecha.cast}")
+        
+      # Establecemos el cast
+      self.cast = 'Int'
 
 
 @dataclass
@@ -252,6 +356,18 @@ class Resta(OperacionBinaria):
         resultado += f'{(n)*" "}: {self.cast}\n'
         return resultado
 
+    def Tipo(self, ambito):
+      # Comprobamos que los dos lados estén bien
+      self.izquierda.Tipo(ambito)
+      self.derecha.Tipo(ambito)
+      
+      # Comprobamos solo integers
+      if self.izquierda.cast != 'Int' or self.derecha.cast != 'Int':
+        raise CustomizedException(f"{self.linea}: non-Int arguments: {self.izquierda.cast} - {self.derecha.cast}")
+
+      # Establecemos el cast
+      self.cast = 'Bool'
+
 
 @dataclass
 class Multiplicacion(OperacionBinaria):
@@ -265,6 +381,18 @@ class Multiplicacion(OperacionBinaria):
         resultado += f'{(n)*" "}: {self.cast}\n'
         return resultado
 
+    def Tipo(self, ambito):
+      # Comprobamos que los dos lados estén bien
+      self.izquierda.Tipo(ambito)
+      self.derecha.Tipo(ambito)
+      
+      # Comprobamos solo integers
+      if self.izquierda.cast != 'Int' or self.derecha.cast != 'Int':
+        # Lanzar Error
+        pass
+
+      # Establecemos el cast
+      self.cast = 'Bool'
 
 
 @dataclass
@@ -279,12 +407,18 @@ class Division(OperacionBinaria):
         resultado += f'{(n)*" "}: {self.cast}\n'
         return resultado
 
-    def tipo(self):
-      izda = self.izquierdo.tipo()
-      dcho = self.derecho.tipo()
-      if (izda == dcho):
-        # Comprobar que la clase se puede dividir y lanzar excepciones
-        self.cast = izda
+    def Tipo(self, ambito):
+      # Comprobamos que los dos lados estén bien
+      self.izquierda.Tipo(ambito)
+      self.derecha.Tipo(ambito)
+      
+      # Comprobamos solo integers
+      if self.izquierda.cast != 'Int' or self.derecha.cast != 'Int':
+        # Lanzar Error
+        pass
+
+      # Establecemos el cast
+      self.cast = 'Bool'
 
 
 @dataclass
@@ -300,13 +434,18 @@ class Menor(OperacionBinaria):
         return resultado
 
     
-    def tipo(self, ambito):
-      self.Izquierda.tipo(ambito)
-      self.Derecha.tipo(ambito)
-      if (self.Izquierda.cast == self.Derecha.cast):
-        self.cast = 'Bool'
-      else:
-        self.cast = 'Object'
+    def Tipo(self, ambito):
+      # Comprobamos que los dos lados estén bien
+      self.izquierda.Tipo(ambito)
+      self.derecha.Tipo(ambito)
+      
+      # Comprobamos solo integers
+      if self.izquierda.cast != 'Int' or self.derecha.cast != 'Int':
+        # Lanzar Error
+        pass
+
+      # Establecemos el cast
+      self.cast = 'Bool'
     
 
 @dataclass
@@ -321,14 +460,18 @@ class LeIgual(OperacionBinaria):
         resultado += f'{(n)*" "}: {self.cast}\n'
         return resultado
 
-    def tipo(self):
-      self.Izquierda.tipo()
-      self.Derecha.tipo()
-      if (self.Izquierda.cast == self.Derecha.cast):
-        self.cast = 'Bool'
-      else:
-        self.cast = 'Object'
+    def Tipo(self, ambito):
+      # Comprobamos que esten bien los hijos
+      self.izquierda.Tipo(ambito)
+      self.derecha.Tipo(ambito)
 
+      # Comprobamos solo integers
+      if self.izquierda.cast != 'Int' or self.derecha.cast != 'Int':
+        # Lanzar Error
+        pass
+
+      # Establecemos el cast
+      self.cast = 'Bool'
 
 @dataclass
 class Igual(OperacionBinaria):
@@ -342,9 +485,19 @@ class Igual(OperacionBinaria):
         resultado += f'{(n)*" "}: {self.cast}\n'
         return resultado
 
-    def tipo(self, ambito):
-      # Comprobamos que el izquierdo esté en el ambito
-      pass
+    def Tipo(self, ambito):
+      # Comprobamos el cast de cada lado
+      self.izquierda.Tipo(ambito)
+      self.derecha.Tipo(ambito)
+
+      # Comprobamos que sean del mismo tipo
+      if self.izquierda.cast in ['Int', 'String', 'Bool']:
+        if (self.izquierda.cast != self.derecha.cast):
+          # Lanzar Error
+          pass
+      
+      self.cast = 'Bool'
+      
 
 
 
@@ -364,7 +517,7 @@ class Neg(Expresion):
         # Determinamos el tipo de la expresion
         self.expr.Tipo(ambito)
         # Establecemos el tipo de la negación
-        self.cast = self.expr.cast
+        self.cast = 'Bool'
 
 
 
@@ -385,7 +538,7 @@ class Not(Expresion):
         self.expr.Tipo(ambito)
 
         # Una expresión not es un booleano
-        self.cast = self.expr.cast
+        self.cast = 'Bool'
 
 
 @dataclass
@@ -406,10 +559,6 @@ class EsNulo(Expresion):
         # EsNulo siempre es de tipo booleano
         self.cast = 'Bool'
 
-
-
-
-
 @dataclass
 class Objeto(Expresion):
     nombre: str = '_no_set'
@@ -421,8 +570,11 @@ class Objeto(Expresion):
         resultado += f'{(n)*" "}: {self.cast}\n'
         return resultado
 
-    def tipo(self):
-        self.cast = 'Object'
+    def Tipo(self, ambito):
+        # Buscamos este objeto en el ambito
+        tipo = ambito.busca(self.nombre)
+        if (tipo == '_no_encontrado'):
+          raise CustomizedException(f'{self.linea}: Undeclared identifier {self.nombre}.')
 
 
 @dataclass
@@ -435,8 +587,8 @@ class NoExpr(Expresion):
         resultado += f'{(n)*" "}: {self.cast}\n'
         return resultado
     
-    def Tipo(self):
-        self.cast = "_no_expr"
+    def Tipo(self, ambito):
+        pass
 
 
 @dataclass
@@ -450,7 +602,7 @@ class Entero(Expresion):
         resultado += f'{(n)*" "}: {self.cast}\n'
         return resultado
 
-    def Tipo(self):
+    def Tipo(self, ambito):
       self.cast = 'Int'
 
 
@@ -465,7 +617,7 @@ class String(Expresion):
         resultado += f'{(n)*" "}: {self.cast}\n'
         return resultado
 
-    def Tipo(self):
+    def Tipo(self, ambito):
       self.cast = 'String'
   
 @dataclass
@@ -492,17 +644,16 @@ class Programa(IterableNodo):
     def Tipo(self):
       # Creamos el ambito
       ambito = Ambito()
-
+      
       # Construimos el arbol de herencias
       for clase in self.secuencia:
         # Utilizar un arbol para registrar la herencia
-        if (clase.padre=='_no_set'): 
-            ambito.anhadeClase(clase.nombre)
-        else: 
-            ambito.anhadeClase(clase.nombre, clase.padre)
-
+        ambito.anhadeClase(clase)
+   
       # Comprobamos con la funcion Tipo que los tipos de dato son correctos
       for clase in self.secuencia:
+        # Establecemos la referencia a la clase que estamos comprobando
+        ambito.clase_actual = clase
         clase.Tipo(ambito)
   
     def str(self, n):
@@ -528,18 +679,13 @@ class Clase(Nodo):
     def Tipo(self, ambito):
       # Registramos los atributos y metodos conocidos y la clase en la que se definen
       for caracteristica in self.caracteristicas:
-        if (isinstance(caracteristica, Atributo)):
-          # anhadir al ambito el atributo - nombre y tipo
-          ambito.diccionario_declaraciones[(self.nombre, caracteristica.nombre)] = caracteristica.tipo  # Atencion en la busqueda, mirar padres
-        elif(isinstance(caracteristica, Metodo)):
-          # anhadir el metodo
-          pass
-    
-      # Comprobacion de tipos
-      for caracteristica in self.caracteristicas:
+        # Comprobamos que la característica es correcta
         caracteristica.Tipo(ambito)
+  
+        # Anhadimos al ambito la declaración de la característica en la clase
+        # dict: key(nombre clase, nombre caracteristica) : value (tipo de la caracteristica)
+        ambito.dict[(self.nombre, caracteristica.nombre)] = caracteristica.tipo
 
-      
 
     def str(self, n):
         resultado = super().str(n)
@@ -564,10 +710,20 @@ class Metodo(Caracteristica):
         resultado += ''.join([c.str(n+2) for c in self.formales])
         resultado += f'{(n + 2) * " "}{self.tipo}\n'
         resultado += self.cuerpo.str(n+2)
-
         return resultado
 
+    def Tipo(self, ambito):
+      # Comprobamos los tipos de los formales
+      for formal in self.formales:
+        ambito.dict[(self.nombre, formal.nombre_variable)] = formal.tipo
 
+      # comprobamos los formales
+      for formal in self.formales:
+        formal.Tipo(ambito)
+
+      # Comprobamos el cuerpo
+      self.cuerpo.Tipo(ambito)
+      
 class Atributo(Caracteristica):
 
     def str(self, n):
@@ -578,8 +734,17 @@ class Atributo(Caracteristica):
         resultado += self.cuerpo.str(n+2)
         return resultado
 
-    def tipo(self, ambito):
+    def Tipo(self, ambito):
+        # Comprobamos que tenga un error válido
+        if self.nombre == "self":
+          raise CustomizedException(str(self.linea) + ": 'self' cannot be the name of an attribute.")
+
+        # Comprobar que el nombre del atributo no exista ya
+        tipo_nombre = ambito.busca(self.nombre)
+
+        # El atributo ya esta declarado
+        if (tipo_nombre != '_no_encontrado'):
+          raise CustomizedException(str(self.linea) + f": Attribute {self.nombre} is an attribute of an inherited class.")
+      
         # Establecemos el tipo del cuerpo
         self.cuerpo.Tipo(ambito)
-        # Esto determina el tipo del atributo
-        self.tipo = self.cuerpo.cast
