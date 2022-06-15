@@ -18,15 +18,15 @@ _program
           String
           _string
             "test"
-          : _no_type
+          : String
           _dispatch
             _object
               x
-            : _no_type
+            : String
             length
             (
             )
-          : _no_type
+          : Int
         : _no_type
       : _no_type
     )

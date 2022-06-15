@@ -8,31 +8,31 @@ _program
       foo
       _formal
         a
-        A
+        SELF_TYPE
       Bool
       _block
         _lt
           _int
             6
-          : _no_type
+          : Int
           _int
             7
-          : _no_type
-        : _no_type
+          : Int
+        : Bool
         _leq
           _int
             6
-          : _no_type
+          : Int
           _int
             7
-          : _no_type
-        : _no_type
+          : Int
+        : Bool
         _comp
           _bool
             1
-          : _no_type
-        : _no_type
-      : _no_type
+          : Bool
+        : Bool
+      : Bool
     )
   _class
     Main
@@ -44,5 +44,5 @@ _program
       Int
       _int
         6
-      : _no_type
+      : Int
     )

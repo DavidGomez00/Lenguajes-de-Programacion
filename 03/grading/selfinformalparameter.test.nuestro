@@ -9,7 +9,7 @@ _program
       Int
       _int
         0
-      : _no_type
+      : Int
     )
   _class
     A
@@ -21,7 +21,7 @@ _program
       A
       _new
         A
-      : _no_type
+      : A
     _method
       foo
       _formal
@@ -30,5 +30,5 @@ _program
       String
       _string
         "hoo-ah"
-      : _no_type
+      : String
     )

@@ -20,12 +20,12 @@ _program
           population_map
           _object
             map
-          : _no_type
-        : _no_type
+          : String
+        : String
         _object
           self
-        : _no_type
-      : _no_type
+        : SELF_TYPE
+      : SELF_TYPE
     _method
       print
       SELF_TYPE
@@ -33,37 +33,37 @@ _program
         _dispatch
           _object
             self
-          : _no_type
+          : SELF_TYPE
           out_string
           (
           _dispatch
             _object
               population_map
-            : _no_type
+            : String
             concat
             (
             _string
               "\n"
-            : _no_type
+            : String
             )
-          : _no_type
+          : String
           )
-        : _no_type
+        : SELF_TYPE
         _object
           self
-        : _no_type
-      : _no_type
+        : SELF_TYPE
+      : SELF_TYPE
     _method
       num_cells
       Int
       _dispatch
         _object
           population_map
-        : _no_type
+        : String
         length
         (
         )
-      : _no_type
+      : Int
     _method
       cell
       _formal
@@ -73,17 +73,17 @@ _program
       _dispatch
         _object
           population_map
-        : _no_type
+        : String
         substr
         (
         _object
           position
-        : _no_type
+        : Int
         _int
           1
-        : _no_type
+        : Int
         )
-      : _no_type
+      : String
     _method
       cell_left_neighbor
       _formal
@@ -299,11 +299,11 @@ _program
           _dispatch
             _object
               self
-            : _no_type
+            : SELF_TYPE
             num_cells
             (
             )
-          : _no_type
+          : Int
           _let
             temp
             String
@@ -314,57 +314,57 @@ _program
                 _lt
                   _object
                     position
-                  : _no_type
+                  : Int
                   _object
                     num
-                  : _no_type
-                : _no_type
+                  : Int
+                : Bool
                 _block
                   _assign
                     temp
                     _dispatch
                       _object
                         temp
-                      : _no_type
+                      : String
                       concat
                       (
                       _dispatch
                         _object
                           self
-                        : _no_type
+                        : SELF_TYPE
                         cell_at_next_evolution
                         (
                         _object
                           position
-                        : _no_type
+                        : Int
                         )
-                      : _no_type
+                      : String
                       )
-                    : _no_type
-                  : _no_type
+                    : String
+                  : String
                   _assign
                     position
                     _plus
                       _object
                         position
-                      : _no_type
+                      : Int
                       _int
                         1
-                      : _no_type
-                    : _no_type
-                  : _no_type
-                : _no_type
-              : _no_type
+                      : Int
+                    : Int
+                  : Int
+                : Int
+              : Object
               _assign
                 population_map
                 _object
                   temp
-                : _no_type
-              : _no_type
+                : String
+              : String
               _object
                 self
-              : _no_type
-            : _no_type
+              : SELF_TYPE
+            : SELF_TYPE
           : _no_type
         : _no_type
       : _no_type
@@ -388,71 +388,71 @@ _program
           _dispatch
             _new
               CellularAutomaton
-            : _no_type
+            : CellularAutomaton
             init
             (
             _string
               "         X         "
-            : _no_type
+            : String
             )
-          : _no_type
-        : _no_type
+          : CellularAutomaton
+        : CellularAutomaton
         _dispatch
           _object
             cells
-          : _no_type
+          : CellularAutomaton
           print
           (
           )
-        : _no_type
+        : CellularAutomaton
         _let
           countdown
           Int
           _int
             20
-          : _no_type
+          : Int
           _loop
             _lt
               _int
                 0
-              : _no_type
+              : Int
               _object
                 countdown
-              : _no_type
-            : _no_type
+              : Int
+            : Bool
             _block
               _dispatch
                 _object
                   cells
-                : _no_type
+                : CellularAutomaton
                 evolve
                 (
                 )
-              : _no_type
+              : CellularAutomaton
               _dispatch
                 _object
                   cells
-                : _no_type
+                : CellularAutomaton
                 print
                 (
                 )
-              : _no_type
+              : CellularAutomaton
               _assign
                 countdown
                 _sub
                   _object
                     countdown
-                  : _no_type
+                  : Int
                   _int
                     1
-                  : _no_type
-                : _no_type
-              : _no_type
-            : _no_type
-          : _no_type
+                  : Int
+                : Int
+              : Int
+            : Int
+          : Object
         : _no_type
         _object
           self
-        : _no_type
-      : _no_type
+        : SELF_TYPE
+      : SELF_TYPE
     )

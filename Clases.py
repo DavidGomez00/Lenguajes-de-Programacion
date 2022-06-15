@@ -1,5 +1,6 @@
 # coding: utf-8
 from dataclasses import dataclass, field
+from doctest import UnexpectedException
 from typing import List
 from anytree import Node, RenderTree, PreOrderIter
 from collections import defaultdict
@@ -12,52 +13,76 @@ class Ambito():
   el tipo de elemento.
   '''
 
-  # Diccionario que guarda donde se han declarado los metodos y atributos y su tipo
-  dict = defaultdict(str)
-  # Referencia a la clase que estamos analizando
-  clase_actual = None
-
   def __init__(self):
     ''' Instancia un ámbito.'''
+    # Referencia al ambito que estamos analizando
+    self.ambito_actual = None
+    # Referencia a la clase
+    self.clase = None
+    # Diccionario que guarda donde se han declarado los metodos y atributos y su tipo
+    self.dict = defaultdict(str)
+    self.dict_metodos = defaultdict(list)
     # Registro de las clases y herencias
-    self.arbol_clases = Node("ROOT")
+    self.arbol_ambito = Node("Object")
 
-  def anhadeClase(self, clase):
-    ''' Anhade un elemento al ambito. '''
-    # Buscamos el nodo que referencia a la clase padre
-    nodo_padre = [node 
-      for node in PreOrderIter(self.arbol_clases)
-      if node.name == clase.padre]
+    # Registramos clases basicas
+    Node("IO", self.arbol_ambito)
+    Node("Int", self.arbol_ambito)
+    Node("Bool", self.arbol_ambito)
+    Node("String", self.arbol_ambito)
+
+    # Registramos algunas funciones basicas
+    self.dict[("Object", "abort")] = 'Object'
+    self.dict_metodos[("Object", "abort")] = ["abort"]
+    self.dict[("Object", "type_name")] = 'String'
+    self.dict_metodos[("Object", "type_name")] = ["type_name"]
+    self.dict[("Object", "copy")] = 'SELF_TYPE'
+    self.dict_metodos[("Object", "copy")] = ["copy"]
+    self.dict[("String", "length")] = 'Int'
+    self.dict_metodos[("String", "length")] = ["length"]
+
+    self.dict[("IO", "out_string")] = 'SELF_TYPE'
+    self.dict_metodos[("IO", "out_string")] = ['out_string'] + [Formal(linea=0, nombre_variable='x', tipo='String')]
+
+    self.dict[("String", "concat")] = 'String'
+    self.dict_metodos[("String", "concat")] = ['concat'] + [Formal(linea=0, nombre_variable='s', tipo='String')]
+
+    self.dict[("String", "substr")] = 'String'
+    self.dict_metodos[("String", "substr")] = ['substr'] + [Formal(linea=0, nombre_variable='i', tipo='Int'), Formal(linea=0, nombre_variable='l', tipo='Int')]
     
-    # Si no se encuentra el padre, depende de ROOT
-    if (len(nodo_padre) == 0):
-      # Creamos la relación de herencia
-      Node(clase.nombre, parent=self.arbol_clases)
-    else:
-      # Creamos la relación de herencia
-      Node(clase.nombre, parent=nodo_padre[0])
+  def anhadeAmbito(self, ambito:str, padre:str='Object'):
+    ''' Anhade un elemento al ambito. '''
+    # Encontramos el nodo padre 
+    nodo_padre = [node 
+                for node in PreOrderIter(self.arbol_ambito)
+                if node.name == padre][0]
+    # Creamos la dependencia en el arbol
+    Node(ambito, nodo_padre)
+    # Creamos el ámbito en el diccionario
+    self.dict[(padre, ambito)] = ambito
 
-    # Anhadimos la clase al ambito
-    self.dict[('ROOT', clase.nombre)] = clase.nombre
-
-  def busca(self, nombre:str, clase:str=None):
+  def busca(self, nombre:str, ambito:str=''):
     ''' Encuentra el tipo de nombre. Si no esta asignado retorna _no_encontrado.
     '''
     # En caso de no especificar la clase desde la que buscar, usamos la clase actual
-    if (clase is None): 
-      clase = self.clase_actual.nombre
+    if (ambito == ''): 
+      ambito = self.ambito_actual
+    # Nodo correspondiente al ambito desde la que buscamos
+    nodo_actual = [nodo
+                  for nodo in PreOrderIter(self.arbol_ambito) # Todos los nodos del arbol
+                  if nodo.name == ambito]                     # Solo aquel cuyo nombre coincide
     
-    # Nodo correspondiente a la clase desde la que buscamos
-    nodo_actual = [nodo 
-                  for nodo in PreOrderIter(self.arbol_clases) # Todos los nodos del arbol
-                  if nodo.name == clase][0]                   # Solo aquel cuyo nombre coincide
-    
-    # Consigo todas las tuplas de (clase, atributo) para la clase y sus padres
+    # Evitamos errores en caso de que no haya ambitos con este nombre
+    if (len(nodo_actual) == 0):
+      return 'no_encontrado'
+    else:
+      nodo_actual = nodo_actual[0]
+
+    # Consigo todas las tuplas de (ambito, atributo) para el ambito y sus padres
     tuplas = []
     while (nodo_actual is not None):
       tuplas.append((nodo_actual.name, nombre)) # Anhado la tupla (clase, caracteristica)
       nodo_actual = nodo_actual.parent          # Buscamos en el padre
-    
     # Compruebo en todas las entradas para las tuplas generadas
     for tupla in tuplas:
       # Si la entrada es distinta de la default ('') retorna lo que ha encontrado
@@ -66,6 +91,44 @@ class Ambito():
     # Si no encontramos nada, retorna '_no_encontrado'
     return '_no_encontrado'
       
+  def buscaMetodo(self, metodo:str, ambito:str=''):
+    '''Busca un método en una clase o sus padres.'''
+    # En caso de no especificar el ambito usamos el ambito actual
+    if (ambito == ''): ambito = self.ambito_actual
+    print(f"Busca {metodo} desde {ambito}")
+    # Encuentra correspondiente al ambito
+    nodo = [nodo
+            for nodo in PreOrderIter(self.arbol_ambito)
+            if nodo.name == ambito]
+
+    # Evitamos errores en caso de que no haya ambitos con este nombre
+    if (len(nodo) == 0):
+      return ['_no_encontrado']
+    else:
+      nodo = nodo[0]
+    
+    # Generamos las entradas del diccinoario para todos los ambitos por encima del arbol
+    tuplas = []
+    while (nodo is not None):
+      tuplas.append((nodo.name, metodo)) # Anhado la tupla (clase, caracteristica)
+      nodo = nodo.parent                 # Buscamos en el padre
+    print(tuplas)
+    # Compruebo en todas las entradas para las tuplas generadas
+    for tupla in tuplas:
+      # Si el metodo existe retorna lo que ha encontrado
+      if len(self.dict_metodos[tupla]) != 0:
+        return self.dict_metodos[tupla]
+    # Si no encontramos nada, retorna la lista vacía
+    return ["_no_encontrado"]
+
+  def claseInAmbito(self, clase:str):
+    '''Retorna True si la clase está registrada en el ambito.'''
+    nodo = [nodo
+            for nodo in PreOrderIter(self.arbol_ambito)
+            if nodo.name == clase]
+    if len(nodo) != 0: return True
+    return False
+
 @dataclass
 class Nodo:
     linea: int = 0
@@ -90,12 +153,17 @@ class Formal(Nodo):
       if self.tipo not in ['Int', 'Bool', 'String']:
         # Comprobamos que tenemos la clase en el arbol de clases
         clase = [clase 
-                for clase in PreOrderIter(ambito.arbol_clases)
+                for clase in PreOrderIter(ambito.arbol_ambito)
                 if clase.name == self.tipo]
         # Si la longitud de la lista es 0, es que no ha encontrado la clase
         if len(clase) == 0:
           # Lanzar Error
           pass
+        # Si hemos encontrado la clase
+        clase = clase[0]
+        # El formal declarado con el mismo tipo que la clase actual es de tipo SELF_TYPE
+        if (self.tipo == clase.name): self.tipo = 'SELF_TYPE'
+
       
 
 class Expresion(Nodo):
@@ -121,6 +189,7 @@ class Asignacion(Expresion):
       
       # Comprobamos que son el mismo tipo
       tipo_nombre = ambito.busca(self.nombre)
+      # Tenemos que tener en cuenta la herencia TODO:
       if (self.cuerpo.cast != tipo_nombre):
         raise CustomizedException(f"{self.linea}: Type {self.cuerpo.cast} of assigned expression does not conform to declared type {tipo_nombre} of identifier {self.nombre}.")
       # Cambiamos el cast de la asignación
@@ -173,8 +242,40 @@ class LlamadaMetodo(Expresion):
       # Comprobamos el cuerpo
       self.cuerpo.Tipo(ambito)
 
+      # Comprobamos que tenga un cuerpo desde donde se llama
+      if(self.cuerpo.cast == 'SELF_TYPE'): ambito_base = ambito.clase
+      else: ambito_base = self.cuerpo.cast
+
       # Buscamos el tipo del método
-      tipo_metodo = ambito.busca(self.nombre_metodo, self.cuerpo.cast)
+      tipo_metodo = ambito.busca(self.nombre_metodo, ambito_base)
+      
+      # Si no lo encuentra tira un error
+      if (tipo_metodo == '_no_encontrado'):
+        raise CustomizedException(f'{self.linea}: Dispatch to undefined method {self.nombre_metodo}.')
+      # Si encuentra el tipo como SELF_TYPE, el tipo es como el del cuerpo
+      if (tipo_metodo == 'SELF_TYPE'):
+        tipo_metodo = self.cuerpo.cast
+
+      # Comprobamos los parametros
+      parametros = ambito.buscaMetodo(self.nombre_metodo, ambito_base)
+      print(parametros)
+      # Si no lo encuentra tira un error
+      if parametros[0] == '_no_encontrado':
+        raise CustomizedException(f'{self.linea}: Dispatch to undefined method {self.nombre_metodo}.')
+      # Si lo encuentra quitamos el primer elemento para ahorrarnos problemas
+      parametros = parametros[1::]
+      # Mismo numero de parametros
+      if len(self.argumentos) != len(parametros):
+        raise CustomizedException(f"Error por determinar b")
+      # Comprobamos los tipos de los argumentos
+      for argumento in self.argumentos:
+        argumento.Tipo(ambito)
+      # Mismo tipo estático
+      for i, formal in enumerate(parametros):
+        if (self.argumentos[i].cast != formal.tipo):
+          raise CustomizedException(f"{self.linea}: In call of method {self.nombre_metodo}, type {self.argumentos[i].cast} of parameter {formal.nombre_variable} does not conform to declared type {formal.tipo}.")
+      # Establecemos el cast de la llamada
+      self.cast = tipo_metodo
 
 @dataclass
 class Condicional(Expresion):
@@ -210,8 +311,17 @@ class Bucle(Expresion):
         return resultado
 
     def Tipo(self, ambito):
-      # Falta por implementar
-      pass
+      # Comprobamos la condicion
+      self.condicion.Tipo(ambito)
+
+      if self.condicion.cast != 'Bool':
+        raise CustomizedException(f"{self.linea}: Loop condition does not have type Bool.")
+
+      # Comprobamos el cuerpo
+      self.cuerpo.Tipo(ambito)
+
+      # El cast de un loop es Object
+      self.cast = 'Object'
 
 
 @dataclass
@@ -232,8 +342,25 @@ class Let(Expresion):
         return resultado
 
     def Tipo(self, ambito):
-      # Falta por implementar
-      pass
+      # Anhadimos el ambito del let al arbol de ambitos
+      ambito.anhadeAmbito(self.nombre, ambito.ambito_actual)
+
+      # Cambiamos el ambito actual al ambito del let
+      ambito.ambito_actual = self.nombre
+
+      # Anhadimos al ambito lo declarado en el Let
+      ambito.dict[(ambito.ambito_actual, self.nombre)] = self.tipo
+
+      # Comprobamos la inicialización
+      self.inicializacion.Tipo(ambito)
+
+      # Simulamos una asignacion
+
+
+      # Comprobamos primero el cuerpo
+      self.cuerpo.Tipo(ambito)
+      
+       
 
 
 @dataclass
@@ -256,7 +383,7 @@ class Bloque(Expresion):
       self.cast = self.expresiones[-1].cast
 
 @dataclass
-class RamaCase(Nodo):
+class RamaCase(Expresion):
     nombre_variable: str = '_no_set'
     tipo: str = '_no_set'
     cuerpo: Expresion = None
@@ -271,11 +398,19 @@ class RamaCase(Nodo):
         return resultado
 
     def Tipo(self, ambito):
-      # Falta implementar
-      pass
+      # Anhadimos este case al arbol de ambitos
+      ambito.anhadeAmbito("case" + self.nombre_variable, ambito.ambito_actual)
+      # Cambio el ambito actual a case
+      ambito.ambito_actual = "case" + self.nombre_variable
+      # Anhadimos la variable declarada
+      ambito.dict[(ambito.ambito_actual, self.nombre_variable)] = self.tipo
+      # Comprobamos el cuerpo
+      self.cuerpo.Tipo(ambito)
+      # Establecemos el cast del caso
+      self.cast = self.tipo
 
 @dataclass
-class Swicht(Nodo):
+class Swicht(Expresion):
     expr: Expresion = None
     casos: List[RamaCase] = field(default_factory=list)
 
@@ -288,8 +423,13 @@ class Swicht(Nodo):
         return resultado
 
     def Tipo(self, ambito):
-      # Falta implementar
-      pass
+      tipos = []
+      # Comprobamos los case
+      for caso in self.casos:
+        caso.Tipo(ambito)
+        if caso.cast in tipos:
+          raise CustomizedException(f'{self.linea}: Duplicate branch {caso.cast} in case statement.')
+        tipos.append(caso.cast)
 
 @dataclass
 class Nueva(Expresion):
@@ -304,7 +444,7 @@ class Nueva(Expresion):
 
     def Tipo(self, ambito):
       # Comprobamos que tenemos el tipo en el ambito
-      clase = [clase for clase in PreOrderIter(ambito.arbol_clases)
+      clase = [clase for clase in PreOrderIter(ambito.arbol_ambito)
               if clase.name == self.tipo][0]
       if not clase:
         # Lanzar Error
@@ -366,13 +506,13 @@ class Resta(OperacionBinaria):
         raise CustomizedException(f"{self.linea}: non-Int arguments: {self.izquierda.cast} - {self.derecha.cast}")
 
       # Establecemos el cast
-      self.cast = 'Bool'
+      self.cast = 'Int'
 
 
 @dataclass
 class Multiplicacion(OperacionBinaria):
     operando: str = '*'
-
+    
     def str(self, n):
         resultado = super().str(n)
         resultado += f'{(n)*" "}_mul\n'
@@ -392,7 +532,7 @@ class Multiplicacion(OperacionBinaria):
         pass
 
       # Establecemos el cast
-      self.cast = 'Bool'
+      self.cast = 'Int'
 
 
 @dataclass
@@ -418,7 +558,7 @@ class Division(OperacionBinaria):
         pass
 
       # Establecemos el cast
-      self.cast = 'Bool'
+      self.cast = 'Int'
 
 
 @dataclass
@@ -494,7 +634,7 @@ class Igual(OperacionBinaria):
       if self.izquierda.cast in ['Int', 'String', 'Bool']:
         if (self.izquierda.cast != self.derecha.cast):
           # Lanzar Error
-          pass
+          raise CustomizedException(f'{self.linea}: Illegal comparison with a basic type.')
       
       self.cast = 'Bool'
       
@@ -571,10 +711,20 @@ class Objeto(Expresion):
         return resultado
 
     def Tipo(self, ambito):
-        # Buscamos este objeto en el ambito
-        tipo = ambito.busca(self.nombre)
-        if (tipo == '_no_encontrado'):
-          raise CustomizedException(f'{self.linea}: Undeclared identifier {self.nombre}.')
+        # Comprobamos el nombre
+        if (self.nombre == 'self'):
+          self.cast = 'SELF_TYPE'
+        else:
+          # Buscamos este objeto en el ambito
+          tipo = ambito.busca(self.nombre)
+
+          # Si no lo encuentra levantamos una excepción
+          if (tipo == '_no_encontrado'):
+            raise CustomizedException(f"{self.linea}: Undeclared identifier {self.nombre}.")
+
+          # Si lo encuentra, establecemos el cast
+          self.cast = tipo
+        
 
 
 @dataclass
@@ -645,16 +795,29 @@ class Programa(IterableNodo):
       # Creamos el ambito
       ambito = Ambito()
       
-      # Construimos el arbol de herencias
+      # Construimos el arbol de ambitos
       for clase in self.secuencia:
-        # Utilizar un arbol para registrar la herencia
-        ambito.anhadeClase(clase)
-   
-      # Comprobamos con la funcion Tipo que los tipos de dato son correctos
+        # Utilizar un arbol para registrar las dependencias de ambitos
+        if(clase.padre in ['Int', 'Bool', 'String', 'SELF_TYPE']):
+          raise CustomizedException(f"{self.linea}: Class {clase.nombre} cannot inherit class {clase.padre}.")
+        if(clase.padre != 'Object' and not ambito.claseInAmbito(clase.padre)):
+          raise CustomizedException(f'{self.linea}: Expression type SELF_TYPE does not conform to declared static dispatch type {clase.nombre}.')
+        ambito.anhadeAmbito(clase.nombre, clase.padre)
+        
+      # Registramos las caracteristicas de la clase
       for clase in self.secuencia:
         # Establecemos la referencia a la clase que estamos comprobando
-        ambito.clase_actual = clase
+        ambito.ambito_actual = clase.nombre
+        ambito.clase = clase.nombre
+        clase.RegistraCaracteristicas(ambito)
+      
+      # Comprobamos que los tipos están bien
+      for clase in self.secuencia:
+        # Comprobamos los tipos
+        ambito.ambito_actual = clase.nombre
+        ambito.clase = clase.nombre
         clase.Tipo(ambito)
+      
   
     def str(self, n):
         resultado = super().str(n)
@@ -676,15 +839,48 @@ class Clase(Nodo):
     nombre_fichero: str = '_no_set'
     caracteristicas: List[Caracteristica] = field(default_factory=list)
 
-    def Tipo(self, ambito):
+    def RegistraCaracteristicas(self, ambito):
+      ''' Registra las declaraciones de cada clase.'''
       # Registramos los atributos y metodos conocidos y la clase en la que se definen
       for caracteristica in self.caracteristicas:
-        # Comprobamos que la característica es correcta
-        caracteristica.Tipo(ambito)
-  
         # Anhadimos al ambito la declaración de la característica en la clase
         # dict: key(nombre clase, nombre caracteristica) : value (tipo de la caracteristica)
-        ambito.dict[(self.nombre, caracteristica.nombre)] = caracteristica.tipo
+        
+        # Atributos
+        if (isinstance(caracteristica, Atributo)):
+          # Comprobamos que el atributo no se llame 'self'
+          if caracteristica.nombre == "self":
+            raise CustomizedException(f"{caracteristica.linea}: 'self' cannot be the name of an attribute.")
+
+          # Comprobamos que el atributo no este ya definido
+          tipo_nombre = ambito.busca(caracteristica.nombre, self.nombre)
+          if (tipo_nombre != '_no_encontrado'):
+            raise CustomizedException(str(caracteristica.linea) + f": Attribute {caracteristica.nombre} is an attribute of an inherited class.")
+          # Registra el atributo en la clase
+          ambito.dict[(self.nombre, caracteristica.nombre)] = caracteristica.tipo
+          
+        # Metodos
+        if (isinstance(caracteristica, Metodo)):
+          # Anhadimos el ambito al arbol de ambitos
+          ambito.anhadeAmbito(caracteristica.nombre, self.nombre)
+          # Anhadimos el metodo al ambito
+          ambito.dict[(self.nombre, caracteristica.nombre)] = caracteristica.tipo
+          ambito.dict_metodos[(self.nombre, caracteristica.nombre)] = [caracteristica.nombre] + caracteristica.formales
+
+    def Tipo(self, ambito):
+      ''' Comprueba que los tipos estén bien.'''
+      # Comprobamos el nombre de la clase
+      if (self.nombre in ['Int', 'Bool', 'String']):
+        raise CustomizedException(f'{self.linea + 1}: Redefinition of basic class {self.nombre}.')
+      
+      # Comprobarmos que no hereda de clases basicas
+      if (self.padre in ['Int', 'Bool', 'String']):
+        raise CustomizedException(f'{self.linea}: Class {self.nombre} cannot inherit class {self.padre}.')
+
+      for caracteristica in self.caracteristicas:
+        # Comprobamos que la característica es correcta
+        ambito.ambito_actual = self.nombre
+        caracteristica.Tipo(ambito)
 
 
     def str(self, n):
@@ -713,6 +909,9 @@ class Metodo(Caracteristica):
         return resultado
 
     def Tipo(self, ambito):
+      # Establecemos el nombre del ambito como el nombre del metodo
+      ambito.ambito_actual = self.nombre
+
       # Comprobamos los tipos de los formales
       for formal in self.formales:
         ambito.dict[(self.nombre, formal.nombre_variable)] = formal.tipo
@@ -735,16 +934,5 @@ class Atributo(Caracteristica):
         return resultado
 
     def Tipo(self, ambito):
-        # Comprobamos que tenga un error válido
-        if self.nombre == "self":
-          raise CustomizedException(str(self.linea) + ": 'self' cannot be the name of an attribute.")
-
-        # Comprobar que el nombre del atributo no exista ya
-        tipo_nombre = ambito.busca(self.nombre)
-
-        # El atributo ya esta declarado
-        if (tipo_nombre != '_no_encontrado'):
-          raise CustomizedException(str(self.linea) + f": Attribute {self.nombre} is an attribute of an inherited class.")
-      
         # Establecemos el tipo del cuerpo
         self.cuerpo.Tipo(ambito)

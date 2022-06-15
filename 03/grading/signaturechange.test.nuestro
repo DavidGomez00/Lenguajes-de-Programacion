@@ -9,7 +9,7 @@ _program
       Int
       _int
         0
-      : _no_type
+      : Int
     )
   _class
     A
@@ -25,11 +25,11 @@ _program
       foo
       _formal
         x
-        A
+        SELF_TYPE
       A
       _object
         x
-      : _no_type
+      : A
     )
   _class
     B
@@ -40,12 +40,12 @@ _program
       foo
       _formal
         x
-        A
+        SELF_TYPE
       _formal
         y
-        A
+        SELF_TYPE
       A
       _object
         self
-      : _no_type
+      : SELF_TYPE
     )

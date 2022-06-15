@@ -1,0 +1,2 @@
+stringtest.test:4: Dispatch to undefined method substr.
+Compilation halted due to static semantic errors.

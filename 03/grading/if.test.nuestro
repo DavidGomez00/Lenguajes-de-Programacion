@@ -57,5 +57,5 @@ _program
       String
       _string
         "test"
-      : _no_type
+      : String
     )

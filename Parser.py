@@ -28,11 +28,11 @@ class CoolParser(Parser):
     # Program
     @_('_class ";"')
     def _program(self, p):
-      return Programa(secuencia=[p._class])
+      return Programa(secuencia=[p._class], linea=p.lineno)
 
     @_('_class ";" _program')
     def _program(self, p):
-      return Programa(secuencia=[p._class]+p._program.secuencia)
+      return Programa(secuencia=[p._class]+p._program.secuencia, linea=p.lineno)
 
     # Class
     @_('CLASS TYPEID "{" _feature_list "}"')
@@ -40,7 +40,8 @@ class CoolParser(Parser):
       return Clase(nombre=p.TYPEID,
                    padre="Object",
                    nombre_fichero=self.nombre_fichero,
-                   caracteristicas=p[3])
+                   caracteristicas=p[3],
+                   linea=p.lineno)
 
     # Class
     @_('CLASS TYPEID "{" error "}"')
@@ -52,7 +53,8 @@ class CoolParser(Parser):
       return Clase(nombre=p[1],
                    padre=p[3],
                    nombre_fichero=self.nombre_fichero,
-                   caracteristicas=p[5])
+                   caracteristicas=p[5],
+                   linea=p.lineno)
 
     @_('CLASS TYPEID INHERITS TYPEID "{" error "}"')
     def _class(self, p):
@@ -169,7 +171,8 @@ class CoolParser(Parser):
     def _expr(self, p):
       return Swicht(
         expr=p[1],
-        casos=p[3])
+        casos=p[3],
+        linea=p.lineno)
   
     ##  RamaCase
     @_('OBJECTID ":" TYPEID DARROW _expr')
@@ -177,7 +180,8 @@ class CoolParser(Parser):
       return RamaCase(
         nombre_variable=p[0],
         tipo=p[2],
-        cuerpo=p[4])
+        cuerpo=p[4],
+        linea=p.lineno)
       
     ## ListaCase
     @_('_rama_case ";" _lista_case')
@@ -199,14 +203,16 @@ class CoolParser(Parser):
       return LlamadaMetodoEstatico(
         clase=p[2],
         nombre_metodo=p[4],
-        argumentos=p[6])
+        argumentos=p[6],
+        linea=p.lineno)
     
     @_('_expr "@" TYPEID "." OBJECTID "(" ")"')
     def _expr(self, p):
       return LlamadaMetodoEstatico(
         clase=p[2],
         nombre_metodo=p[4],
-        argumentos=[])
+        argumentos=[],
+        linea=p.lineno)
       
     ## Llamada a método
     @_('_expr "." OBJECTID "(" _expr_list ")"')
@@ -214,14 +220,16 @@ class CoolParser(Parser):
         return LlamadaMetodo(
           cuerpo=p[0],
           nombre_metodo=p[2],
-          argumentos=p[4])
+          argumentos=p[4],
+          linea=p.lineno)
 
     @_('OBJECTID "(" _expr_list ")"')
     def _expr(self, p):
       return LlamadaMetodo(
         cuerpo=Objeto(nombre="self"),
         nombre_metodo=p[0],
-        argumentos=p[2])
+        argumentos=p[2],
+        linea=p.lineno)
 
     @_('OBJECTID "(" error ")"')
     def _expr(self, p):
@@ -232,14 +240,16 @@ class CoolParser(Parser):
       return LlamadaMetodo(
         cuerpo=p[0],
         nombre_metodo=p[2],
-        argumentos=[])
+        argumentos=[],
+        linea=p.lineno)
 
     @_('OBJECTID "(" ")"')
     def _expr(self, p):
       return LlamadaMetodo(
         cuerpo=Objeto(nombre="self"),
         nombre_metodo=p[0],
-        argumentos=[])
+        argumentos=[],
+        linea=p.lineno)
     
     ## Condicional
     @_('IF _expr THEN _expr ELSE _expr FI')
@@ -249,7 +259,7 @@ class CoolParser(Parser):
     ## Bucle
     @_('WHILE _expr LOOP _expr POOL')
     def _expr(self, p):
-      return Bucle(condicion=p[1], cuerpo=p[3])
+      return Bucle(condicion=p[1], cuerpo=p[3], linea=p.lineno)
 
     ## Let
     @_('LET OBJECTID ":" TYPEID ASSIGN _expr IN _expr')

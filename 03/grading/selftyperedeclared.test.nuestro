@@ -9,7 +9,7 @@ _program
       Int
       _int
         0
-      : _no_type
+      : Int
     )
   _class
     SELF_TYPE
@@ -20,9 +20,9 @@ _program
       foo
       _formal
         x
-        Object
+        SELF_TYPE
       Object
       _object
         x
-      : _no_type
+      : Object
     )

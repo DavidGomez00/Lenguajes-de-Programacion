@@ -18,11 +18,11 @@ _program
             : _no_type
             _object
               x
-            : _no_type
+            : SELF_TYPE
           : _no_type
           _object
             y
-          : _no_type
+          : SELF_TYPE
         : _no_type
       : _no_type
     )

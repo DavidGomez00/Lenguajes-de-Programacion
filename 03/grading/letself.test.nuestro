@@ -14,6 +14,6 @@ _program
         : _no_type
         _int
           0
-        : _no_type
+        : Int
       : _no_type
     )

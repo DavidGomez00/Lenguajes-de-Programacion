@@ -9,7 +9,7 @@ _program
       Int
       _int
         0
-      : _no_type
+      : Int
     )
   _class
     A
@@ -26,14 +26,14 @@ _program
         String
       _formal
         c
-        A
+        SELF_TYPE
       _formal
         d
         Bool
       Int
       _object
         a
-      : _no_type
+      : Int
     )
   _class
     B
@@ -50,7 +50,7 @@ _program
         String
       _formal
         c
-        A
+        SELF_TYPE
       _formal
         d
         Bool
@@ -58,9 +58,9 @@ _program
       _plus
         _object
           a
-        : _no_type
+        : Int
         _int
           1
-        : _no_type
-      : _no_type
+        : Int
+      : Int
     )

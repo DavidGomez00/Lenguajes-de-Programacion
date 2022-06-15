@@ -9,7 +9,7 @@ _program
       Int
       _int
         0
-      : _no_type
+      : Int
     )
   _class
     A
@@ -34,22 +34,22 @@ _program
             Int
             _object
               i
-            : _no_type
-          : _no_set
+            : Int
+          : Int
           _branch
             b
             Bool
             _object
               b
-            : _no_type
-          : _no_set
+            : Bool
+          : Bool
           _branch
             s
             String
             _object
               s
-            : _no_type
-          : _no_set
+            : String
+          : String
         : _no_type
       : _no_type
     )

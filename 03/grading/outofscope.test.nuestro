@@ -15,10 +15,10 @@ _program
           : _no_type
           _int
             10
-          : _no_type
+          : Int
         : _no_type
         _object
           x
-        : _no_type
-      : _no_type
+        : Int
+      : Int
     )
